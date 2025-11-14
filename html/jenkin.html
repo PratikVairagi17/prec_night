@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jenkins Mini-Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #fee2e2 40%, #fffbeb 100%);
+            color: #111827;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 40%, #b91c1c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1.05em;
+            color: #4b5563;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            background: #ffffff;
+            color: #4b5563;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: #f97316;
+            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.25);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 40%, #b91c1c 100%);
+            color: #ffffff;
+            border-color: #b91c1c;
+            box-shadow: 0 6px 20px rgba(185, 28, 28, 0.35);
+        }
+
+        .content {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 2px solid #e5e7eb;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 2.1em;
+            margin-bottom: 18px;
+            color: #111827;
+        }
+
+        p {
+            font-size: 0.98em;
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .highlight {
+            color: #f97316;
+            font-weight: 600;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        ul li {
+            margin-bottom: 6px;
+            font-size: 0.96em;
+        }
+
+        .box {
+            border-left: 4px solid;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 16px 0;
+        }
+
+        .box-orange { border-left-color: #f97316; background-color: #fff7ed; }
+        .box-green { border-left-color: #22c55e; background-color: #ecfdf5; }
+        .box-blue  { border-left-color: #3b82f6; background-color: #eff6ff; }
+        .box-rose  { border-left-color: #fb7185; background-color: #ffe4e6; }
+
+        .box h3 {
+            font-size: 1.05em;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 16px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 16px 0;
+        }
+
+        .card {
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.05em;
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .card p {
+            font-size: 0.94em;
+        }
+
+        .card-orange { border-color: #fb923c; background-color: #fff7ed; }
+        .card-green  { border-color: #22c55e; background-color: #ecfdf5; }
+        .card-blue   { border-color: #3b82f6; background-color: #eff6ff; }
+        .card-rose   { border-color: #fb7185; background-color: #ffe4e6; }
+        .card-amber  { border-color: #f59e0b; background-color: #fffbeb; }
+
+        .pill {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 999px;
+            background-color: #fee2e2;
+            color: #b91c1c;
+            font-size: 0.78em;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+
+        .code-block {
+            background: #020617;
+            color: #e5e7eb;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-family: "Courier New", monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 10px 0 14px;
+            line-height: 1.6;
+        }
+
+        .code-block .comm {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .example-box {
+            border-left: 4px solid;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 18px 0;
+        }
+
+        .example-orange { border-left-color: #f97316; background-color: #fff7ed; }
+        .example-green  { border-left-color: #22c55e; background-color: #ecfdf5; }
+        .example-blue   { border-left-color: #3b82f6; background-color: #eff6ff; }
+        .example-rose   { border-left-color: #fb7185; background-color: #ffe4e6; }
+
+        .example-box h3 {
+            font-size: 1.02em;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .qa-item {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .qa-item:hover {
+            border-color: #f97316;
+            box-shadow: 0 4px 14px rgba(248, 113, 113, 0.2);
+        }
+
+        .qa-question {
+            background: #ffffff;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 600;
+            color: #b91c1c;
+        }
+
+        .qa-question:hover {
+            background: #f9fafb;
+        }
+
+        .qa-toggle {
+            font-size: 1.2em;
+            color: #9ca3af;
+            transition: transform 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .qa-toggle.rotate {
+            transform: rotate(180deg);
+        }
+
+        .qa-answer {
+            display: none;
+            padding: 14px 18px;
+            background: #fff7ed;
+            border-top: 1px solid #fed7aa;
+            font-size: 0.95em;
+            color: #374151;
+        }
+
+        .qa-answer.show {
+            display: block;
+        }
+
+        .ss-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-top: 10px;
+        }
+
+        .ss-card {
+            border-radius: 10px;
+            border: 2px solid #fecaca;
+            background-color: #fff7ed;
+            padding: 12px 14px;
+        }
+
+        .ss-card h3 {
+            font-size: 1em;
+            margin-bottom: 6px;
+        }
+
+        .ss-thumb {
+            border-radius: 8px;
+            border: 1px dashed #f97316;
+            background: repeating-linear-gradient(
+                -45deg,
+                #fff7ed,
+                #fff7ed 6px,
+                #fed7aa 6px,
+                #fed7aa 12px
+            );
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b45309;
+            font-size: 0.85em;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        .ss-note {
+            font-size: 0.85em;
+            color: #92400e;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            color: #9ca3b8;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+
+            .content {
+                padding: 22px;
+            }
+
+            .nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Jenkins Mini-Guide</h1>
+        <p>Your DevOps notes for Jenkins CI/CD, pipelines, and interview prep</p>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn active" onclick="switchTab(event, 'what')">📚 What is Jenkins?</button>
+        <button class="nav-btn" onclick="switchTab(event, 'where')">🌍 Where We Use It</button>
+        <button class="nav-btn" onclick="switchTab(event, 'why')">⭐ Why Important</button>
+        <button class="nav-btn" onclick="switchTab(event, 'concepts')">🧩 Core Concepts</button>
+        <button class="nav-btn" onclick="switchTab(event, 'interview')">📖 Interview Q&A</button>
+        <button class="nav-btn" onclick="switchTab(event, 'examples')">💻 Hands-On Examples</button>
+        <button class="nav-btn" onclick="switchTab(event, 'screenshots')">🖼️ Screenshots Guide</button>
+    </div>
+
+    <div class="content">
+
+        <!-- WHAT -->
+        <div id="what" class="section active">
+            <h2>1️⃣ What is Jenkins?</h2>
+            <p class="tagline">
+                Think of Jenkins as a <span class="highlight">DevOps robot</span> that builds, tests, and deploys your app whenever code changes.
+            </p>
+            <p>
+                <strong>Jenkins</strong> is an open-source automation server used mainly for
+                <span class="highlight">CI/CD</span> (Continuous Integration and Continuous Delivery/Deployment).
+                It automates the process of building, testing, and deploying applications.
+            </p>
+
+            <div class="box box-orange">
+                <h3>Jenkins in simple words</h3>
+                <p>Instead of you manually doing:</p>
+                <ul>
+                    <li><code>git pull</code></li>
+                    <li><code>mvn clean install</code> / <code>npm install</code></li>
+                    <li><code>pytest</code> / JUnit</li>
+                    <li><code>docker build</code> / <code>scp</code> / <code>kubectl apply</code></li>
+                </ul>
+                <p>...you let <strong>Jenkins do all of this automatically</strong> on every commit or pull request.</p>
+            </div>
+
+            <div class="box box-blue">
+                <h3>How Jenkins behaves (mental model)</h3>
+                <ul>
+                    <li>Watches your Git repo (GitHub, GitLab, Bitbucket, etc.).</li>
+                    <li>On every push / PR:
+                        <ul>
+                            <li>Pulls latest code</li>
+                            <li>Builds it</li>
+                            <li>Runs tests</li>
+                            <li>Packages the app</li>
+                            <li>Deploys (if configured)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WHERE -->
+        <div id="where" class="section">
+            <h2>2️⃣ Where Do We Use Jenkins?</h2>
+            <p>Anywhere you want to automate steps in the <span class="highlight">software delivery lifecycle (SDLC)</span>.</p>
+
+            <div class="grid-3">
+                <div class="card card-orange">
+                    <h3>⚡ Continuous Integration (CI)</h3>
+                    <p>Every push/PR triggers:</p>
+                    <ul>
+                        <li>Build</li>
+                        <li>Automated tests</li>
+                        <li>Static analysis (linting, SonarQube)</li>
+                    </ul>
+                </div>
+
+                <div class="card card-green">
+                    <h3>🚀 Continuous Delivery / Deployment (CD)</h3>
+                    <p>Automated deploys to:</p>
+                    <ul>
+                        <li>Test / QA</li>
+                        <li>Staging</li>
+                        <li>Production</li>
+                    </ul>
+                    <p>Using scripts, Ansible, Docker, Kubernetes, Helm, etc.</p>
+                </div>
+
+                <div class="card card-blue">
+                    <h3>⏰ Automated / Scheduled Jobs</h3>
+                    <ul>
+                        <li>Nightly builds</li>
+                        <li>Scheduled reports/scripts</li>
+                        <li>DB backups</li>
+                        <li>Log cleanup / rotation</li>
+                    </ul>
+                </div>
+
+                <div class="card card-rose">
+                    <h3>🌐 Multi-environment Pipelines</h3>
+                    <p>Typical pipeline flow:</p>
+                    <p><strong>Build → Test → QA → Staging → Production</strong></p>
+                    <p>Each environment is a stage in your Jenkins pipeline.</p>
+                </div>
+
+                <div class="card card-amber">
+                    <h3>🔌 Integration with DevOps Tools</h3>
+                    <p>Jenkins integrates with:</p>
+                    <ul>
+                        <li>Git, Maven, Gradle, Node, Python</li>
+                        <li>Docker, Kubernetes, Helm</li>
+                        <li>Ansible, Terraform</li>
+                        <li>AWS, Azure, GCP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="box box-green">
+                <h3>Key Takeaway</h3>
+                <p>If someone says <strong>“we want to automate something in SDLC”</strong> → Jenkins can probably do it.</p>
+            </div>
+        </div>
+
+        <!-- WHY -->
+        <div id="why" class="section">
+            <h2>3️⃣ Why Is Jenkins Important?</h2>
+
+            <div class="grid-3">
+                <div class="card card-orange">
+                    <h3>1️⃣ Very Popular & Mature</h3>
+                    <ul>
+                        <li>One of the oldest CI tools.</li>
+                        <li>Huge community and plugin ecosystem.</li>
+                        <li>In DevOps interviews, Jenkins knowledge is almost expected.</li>
+                    </ul>
+                </div>
+
+                <div class="card card-blue">
+                    <h3>2️⃣ Plugin Ecosystem</h3>
+                    <p>Jenkins has 1000+ plugins for:</p>
+                    <ul>
+                        <li>GitHub, GitLab, Bitbucket</li>
+                        <li>Docker, Kubernetes</li>
+                        <li>SonarQube, Nexus, Artifactory</li>
+                        <li>JIRA, Slack, Email</li>
+                    </ul>
+                    <p>If a DevOps tool exists, there’s probably a Jenkins plugin for it.</p>
+                </div>
+
+                <div class="card card-green">
+                    <h3>3️⃣ Flexible & Self-hosted</h3>
+                    <ul>
+                        <li>Install on Linux/Windows, on-prem or cloud VM.</li>
+                        <li>Run Jenkins itself in Docker / Kubernetes.</li>
+                        <li>Full control over:
+                            <ul>
+                                <li>Pipeline logic</li>
+                                <li>Security & credentials</li>
+                                <li>Agents / nodes</li>
+                                <li>Network access for internal services</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="box box-blue">
+                <h3>4️⃣ Pipelines as Code (Jenkinsfile)</h3>
+                <ul>
+                    <li>Define CI/CD process in a <code>Jenkinsfile</code>.</li>
+                    <li>Store it in the repo → version-controlled.</li>
+                    <li>Easy to review, reuse, and maintain.</li>
+                </ul>
+            </div>
+
+            <div class="box box-rose">
+                <h3>5️⃣ Central DevOps Automation Hub</h3>
+                <p>One Jenkins server can:</p>
+                <ul>
+                    <li>Build & test application</li>
+                    <li>Scan (security, quality)</li>
+                    <li>Package artifacts</li>
+                    <li>Deploy to environments</li>
+                    <li>Notify via Slack / Email</li>
+                    <li>Trigger further jobs (downstream pipelines)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONCEPTS -->
+        <div id="concepts" class="section">
+            <h2>4️⃣ Jenkins Core Concepts</h2>
+            <p class="tagline">These are the concepts interviewers expect you to know clearly.</p>
+
+            <div class="box box-orange">
+                <h3>4.1 Jenkins Server (Controller)</h3>
+                <ul>
+                    <li>Main Jenkins instance.</li>
+                    <li>Hosts the Web UI, job configuration, and scheduling.</li>
+                    <li>Older name: <strong>master</strong>; now called <strong>controller</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="box box-green">
+                <h3>4.2 Agents / Nodes</h3>
+                <ul>
+                    <li>Agents (nodes) are machines where builds actually run.</li>
+                    <li>Controller assigns jobs to agents.</li>
+                    <li>Benefits:
+                        <ul>
+                            <li>Scale (many builds in parallel).</li>
+                            <li>Different environments: one agent with Java, one with Docker, one with Android SDK, etc.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="box box-blue">
+                    <h3>4.3 Jobs / Projects</h3>
+                    <p>A <strong>job</strong> (or project) is one unit of work Jenkins does.</p>
+                    <ul>
+                        <li><strong>Freestyle job:</strong> GUI-based, good for simple builds/scripts.</li>
+                        <li><strong>Pipeline job:</strong> uses Jenkinsfile, recommended for modern CI/CD.</li>
+                        <li>Others: Multi-branch pipeline, folders, etc.</li>
+                    </ul>
+                </div>
+
+                <div class="box box-orange">
+                    <h3>4.4 Jenkinsfile</h3>
+                    <p>Text file in your repo that defines the pipeline as code.</p>
+                    <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;agent any<br><br>
+&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Building...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Running tests...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Deploy') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Deploying...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <p>Jenkins reads this file, visualizes stages, and runs them in sequence.</p>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="box box-green">
+                    <h3>4.5 Declarative vs Scripted Pipelines</h3>
+                    <p><strong>Declarative:</strong></p>
+                    <ul>
+                        <li>Newer, structured, easier syntax.</li>
+                        <li>Uses <code>pipeline { ... }</code>.</li>
+                        <li>Recommended for most use cases.</li>
+                    </ul>
+                    <p><strong>Scripted:</strong></p>
+                    <ul>
+                        <li>Pure Groovy code (more flexible).</li>
+                        <li>Uses <code>node { ... }</code> style.</li>
+                        <li>Better for complex logic.</li>
+                    </ul>
+                    <div class="code-block">
+<span class="comm"># Basic scripted example</span><br>
+node {<br>
+&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;echo 'Building...'<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;echo 'Testing...'<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+
+                <div class="box box-blue">
+                    <h3>4.6 Triggers</h3>
+                    <p>How builds start automatically:</p>
+                    <ul>
+                        <li><strong>Webhooks:</strong> GitHub/GitLab notify Jenkins on push/PR.</li>
+                        <li><strong>SCM Polling:</strong> Jenkins polls repo every X minutes.</li>
+                        <li><strong>Cron schedule:</strong> e.g., nightly at 1 AM.</li>
+                        <li><strong>Manual:</strong> click “Build Now”.</li>
+                        <li><strong>Upstream/Downstream:</strong> one job triggers another.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="box box-rose">
+                <h3>4.7 Plugins</h3>
+                <p>Plugins extend Jenkins functionality:</p>
+                <ul>
+                    <li>Source control: Git, GitHub, GitLab.</li>
+                    <li>Build tools: Maven, Gradle, Node, Python.</li>
+                    <li>Containers: Docker, Kubernetes.</li>
+                    <li>Notifications: Email, Slack.</li>
+                    <li>Security & UI: Credentials, Role-based auth, Blue Ocean.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- INTERVIEW -->
+        <div id="interview" class="section">
+            <h2>5️⃣ Jenkins Interview Questions & Answers</h2>
+            <p class="tagline">Use these as your quick revision set before a DevOps round.</p>
+
+            <!-- Q1 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q1. What is Jenkins?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Jenkins is an open-source automation server used primarily for CI/CD. It automates building, testing,
+                    and deploying software by integrating with source control systems and other DevOps tools.
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q2. What problems does Jenkins solve?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>Avoids manual builds and deployments.</li>
+                        <li>Reduces human error in repetitive tasks.</li>
+                        <li>Speeds up feedback to developers.</li>
+                        <li>Creates repeatable, automated CI/CD pipelines.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q3. What is a Jenkins pipeline?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    A Jenkins pipeline is a set of automated steps (build, test, deploy, etc.) defined as code, usually
+                    in a Jenkinsfile, that Jenkins executes in sequence or parallel to deliver software.
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q4. What is a Jenkinsfile?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    A Jenkinsfile is a text file stored in the project repository that defines the Jenkins pipeline as
+                    code. It contains stages, steps, and configuration using declarative or scripted syntax.
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q5. Difference between declarative and scripted pipeline?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Declarative pipeline:</strong>
+                            <ul>
+                                <li>Higher-level, opinionated syntax.</li>
+                                <li>Uses <code>pipeline { ... }</code> block.</li>
+                                <li>Easier to read and maintain.</li>
+                                <li>Recommended for most use cases.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Scripted pipeline:</strong>
+                            <ul>
+                                <li>Based on Groovy scripting.</li>
+                                <li>Uses <code>node { ... }</code> blocks.</li>
+                                <li>More flexible; supports complex logic.</li>
+                                <li>Slightly harder to maintain.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q6. What is a Jenkins agent (or node)?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    A Jenkins agent (node) is a machine that the Jenkins controller uses to run jobs. Agents allow Jenkins
+                    to distribute workloads across multiple systems, scale horizontally, and support different environments
+                    (different OS, tools, SDKs).
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q7. How do you integrate Jenkins with Git?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    High-level steps:
+                    <ul>
+                        <li>Ensure Git plugin is installed (usually pre-installed).</li>
+                        <li>Configure Git in <strong>Manage Jenkins → Global Tool Configuration</strong>.</li>
+                        <li>In job configuration, select <strong>Source Code Management: Git</strong>.</li>
+                        <li>Add repository URL and credentials (if private).</li>
+                        <li>Optionally add webhooks in GitHub/GitLab to trigger builds automatically.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q8. How can Jenkins be triggered automatically when code is pushed?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Two common methods:
+                    <ul>
+                        <li><strong>Webhooks (recommended):</strong>
+                            <ul>
+                                <li>Configure a webhook in Git hosting (GitHub/GitLab/Bitbucket) pointing to Jenkins URL (e.g., <code>/github-webhook/</code>).</li>
+                                <li>On push/PR, Git sends event to Jenkins → Jenkins triggers build.</li>
+                            </ul>
+                        </li>
+                        <li><strong>SCM Polling:</strong>
+                            <ul>
+                                <li>Enable “Poll SCM” in job configuration.</li>
+                                <li>Set cron schedule (e.g., <code>H/5 * * * *</code> for every 5 minutes).</li>
+                                <li>Jenkins periodically checks for changes and builds if repo changed.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q9. What are Jenkins plugins? Why are they important?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Plugins extend Jenkins functionality to integrate with external tools such as Git, Maven, Docker,
+                    Kubernetes, Slack, SonarQube, etc. They are important because they make Jenkins extremely flexible
+                    and allow it to fit into almost any CI/CD ecosystem.
+                </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q10. Difference between a freestyle job and a pipeline job?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Freestyle job:</strong>
+                            <ul>
+                                <li>Configured via Web UI.</li>
+                                <li>Good for simple or legacy builds.</li>
+                                <li>Logic is not stored as code → harder to version-control.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Pipeline job:</strong>
+                            <ul>
+                                <li>Defined as code (Jenkinsfile).</li>
+                                <li>Better for complex CI/CD workflows.</li>
+                                <li>Pipeline definition is version-controlled with the application code.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q11 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q11. How do you store and use credentials securely in Jenkins?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>Store credentials under <strong>Manage Jenkins → Credentials</strong>.</li>
+                        <li>Supported types: username/password, SSH keys, secret text, etc.</li>
+                        <li>In pipelines, reference credentials via <code>credentialsId</code> and <code>withCredentials</code>:
+                            <div class="code-block">
+withCredentials([usernamePassword(credentialsId: 'my-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {<br>
+&nbsp;&nbsp;sh "echo Using user $USER"<br>
+}
+                            </div>
+                        </li>
+                        <li>Never hard-code secrets directly in scripts or Jenkinsfile.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q12 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q12. How do you define stages and steps in a declarative pipeline?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Example:
+                    <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;agent any<br><br>
+&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Building app...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Running tests...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    <ul>
+                        <li><strong>stages:</strong> pipeline phases.</li>
+                        <li><strong>stage:</strong> logical step (build, test, deploy, etc.).</li>
+                        <li><strong>steps:</strong> actual commands/actions inside the stage.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q13 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q13. How do you run steps in parallel in Jenkins pipeline?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Example:
+                    <div class="code-block">
+stage('Parallel Tests') {<br>
+&nbsp;&nbsp;parallel {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Unit Tests') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Running unit tests'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Integration Tests') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Running integration tests'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    This allows independent tasks to run concurrently, speeding up the pipeline.
+                </div>
+            </div>
+
+            <!-- Q14 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q14. How do you archive build artifacts in Jenkins?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>In a pipeline:
+                            <div class="code-block">
+post {<br>
+&nbsp;&nbsp;success {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;archiveArtifacts artifacts: 'build/**', fingerprint: true<br>
+&nbsp;&nbsp;}<br>
+}
+                            </div>
+                        </li>
+                        <li>In freestyle jobs: use “Archive the artifacts” under Post-build Actions.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q15 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q15. What is Blue Ocean in Jenkins?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Blue Ocean is a modern UI for Jenkins (provided via plugin) that improves visualization of pipelines,
+                    stages, and logs. It offers a more user-friendly way to view and interact with Jenkins pipelines.
+                </div>
+            </div>
+
+            <!-- Q16 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q16. How can Jenkins integrate with Docker?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Short answer:
+                    <ul>
+                        <li>Run Jenkins inside Docker.</li>
+                        <li>Use Docker on agents to build and run images.</li>
+                        <li>Use Docker-related pipeline steps or shell commands.</li>
+                    </ul>
+                    Example:
+                    <div class="code-block">
+stage('Build Docker Image') {<br>
+&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sh 'docker build -t myapp:latest .'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sh 'docker push myrepo/myapp:latest'<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                    (Requires Docker available and configured on the agent.)
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAMPLES -->
+        <div id="examples" class="section">
+            <h2>6️⃣ Hands-On Jenkins Examples</h2>
+            <p class="tagline">Conceptual steps you can actually try when you have Jenkins installed.</p>
+
+            <!-- Example 1 -->
+            <div class="example-box example-orange">
+                <h3>Example 1: Simple Freestyle Job</h3>
+                <p><strong>Goal:</strong> Create a job that prints “Hello from Jenkins”.</p>
+                <ul>
+                    <li>Open Jenkins UI.</li>
+                    <li>Click <strong>New Item</strong>.</li>
+                    <li>Name: <code>hello-job</code> → choose <strong>Freestyle project</strong> → OK.</li>
+                    <li>Go to <strong>Build</strong> section:
+                        <ul>
+                            <li>Linux agent: “Execute shell” → <code>echo "Hello from Jenkins"</code></li>
+                            <li>Windows agent: “Execute Windows batch command” → <code>echo Hello from Jenkins</code></li>
+                        </ul>
+                    </li>
+                    <li>Save → click <strong>Build Now</strong>.</li>
+                    <li>Open <strong>Console Output</strong> to see the message.</li>
+                </ul>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="example-box example-green">
+                <h3>Example 2: First Declarative Pipeline (without Jenkinsfile)</h3>
+                <p><strong>Goal:</strong> Create a pipeline with 3 stages.</p>
+                <ul>
+                    <li>New Item → name: <code>simple-pipeline</code> → choose <strong>Pipeline</strong>.</li>
+                    <li>In the Pipeline script box, paste:</li>
+                </ul>
+                <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;agent any<br><br>
+&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Building...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Testing...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Deploy') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Deploying...'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+                </div>
+                <p>Save → Build Now → watch stages in the UI.</p>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="example-box example-blue">
+                <h3>Example 3: Pipeline Using Jenkinsfile in Git Repo</h3>
+                <p>In your Git repo (GitHub/GitLab), create <code>Jenkinsfile</code>:</p>
+                <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;agent any<br><br>
+&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Checkout') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkout scm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Simulating build step'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Simulating tests'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+                </div>
+                <p>
+                    In Jenkins:
+                </p>
+                <ul>
+                    <li>New Item → <code>my-code-pipeline</code> → Pipeline.</li>
+                    <li>Under Pipeline:
+                        <ul>
+                            <li>Definition: <strong>Pipeline script from SCM</strong></li>
+                            <li>SCM: Git</li>
+                            <li>Repo URL: your repo URL</li>
+                        </ul>
+                    </li>
+                    <li>Save → Build → Jenkins pulls repo & uses Jenkinsfile.</li>
+                </ul>
+            </div>
+
+            <!-- Example 4 -->
+            <div class="example-box example-rose">
+                <h3>Example 4: Simple Python Test Pipeline with Docker</h3>
+                <p>Repo contains:</p>
+                <ul>
+                    <li><code>app.py</code></li>
+                    <li><code>test_app.py</code></li>
+                </ul>
+                <p>Create <code>Jenkinsfile</code>:</p>
+                <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;agent {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;docker {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image 'python:3.12-slim'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Checkout') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkout scm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Install dependencies') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'pip install pytest'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Run tests') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'pytest -q'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+                </div>
+                <p>Jenkins will run the pipeline inside a Python Docker container and execute tests.</p>
+            </div>
+
+            <!-- Example 5 -->
+            <div class="example-box example-green">
+                <h3>Example 5: Scheduled Job (Cron-style)</h3>
+                <p><strong>Goal:</strong> Run a job every night at 1 AM.</p>
+                <ul>
+                    <li>Open job configuration.</li>
+                    <li>Under <strong>Build Triggers</strong>, enable <strong>Build periodically</strong>.</li>
+                    <li>Set schedule: <code>0 1 * * *</code></li>
+                </ul>
+                <p>This uses cron format: minute = 0, hour = 1, every day/month/weekday.</p>
+            </div>
+        </div>
+
+        <!-- SCREENSHOTS -->
+        <div id="screenshots" class="section">
+            <h2>7️⃣ Screenshots & Visual Guide</h2>
+            <p class="tagline">
+                These “screenshot cards” show what you should look for in the Jenkins UI.  
+                You can replace the placeholders with real images later.
+            </p>
+
+            <div class="ss-grid">
+                <div class="ss-card">
+                    <h3>1. Jenkins Dashboard</h3>
+                    <div class="ss-thumb">
+                        Dashboard with list of jobs, build status icons (blue/green/red), left sidebar menu.
+                    </div>
+                    <p class="ss-note">
+                        Typical view after login:  
+                        You’ll see job names, last success/failure, and links to build history.
+                        <br><br>
+                        <strong>Optional image:</strong><br>
+                        <code>&lt;img src="screenshots/jenkins-dashboard.png" alt="Jenkins Dashboard"&gt;</code>
+                    </p>
+                </div>
+
+                <div class="ss-card">
+                    <h3>2. New Item Screen</h3>
+                    <div class="ss-thumb">
+                        Field for job name and options: Freestyle, Pipeline, Multi-branch, Folder, etc.
+                    </div>
+                    <p class="ss-note">
+                        This is where you create <strong>Freestyle</strong> or <strong>Pipeline</strong> jobs.
+                        Useful for understanding different job types.
+                    </p>
+                </div>
+
+                <div class="ss-card">
+                    <h3>3. Freestyle Job Config</h3>
+                    <div class="ss-thumb">
+                        Sections: General, Source Code Management, Build Triggers, Build, Post-build Actions.
+                    </div>
+                    <p class="ss-note">
+                        Notice the <strong>Build</strong> section where you add “Execute shell/batch”.
+                        Also see “Build periodically” / “Poll SCM” triggers.
+                    </p>
+                </div>
+
+                <div class="ss-card">
+                    <h3>4. Pipeline Stage View</h3>
+                    <div class="ss-thumb">
+                        Horizontal pipeline with colored boxes: Build → Test → Deploy, each clickable for logs.
+                    </div>
+                    <p class="ss-note">
+                        This is where you visually see each stage from your Jenkinsfile.
+                        Great for explaining pipelines in interviews.
+                    </p>
+                </div>
+
+                <div class="ss-card">
+                    <h3>5. Build Console Output</h3>
+                    <div class="ss-thumb">
+                        Black/white text log showing Git clone, build commands, test results, and final status.
+                    </div>
+                    <p class="ss-note">
+                        Console Output is your first place to debug a failing job.
+                        Learn how to scroll and search logs for errors.
+                    </p>
+                </div>
+
+                <div class="ss-card">
+                    <h3>6. Credentials Page</h3>
+                    <div class="ss-thumb">
+                        List of credentials IDs with types (username/password, SSH, secret text).
+                    </div>
+                    <p class="ss-note">
+                        Shows where Jenkins stores secrets.  
+                        In pipelines, you only reference <strong>credentialsId</strong> → secret values are hidden.
+                    </p>
+                </div>
+            </div>
+
+            <div class="box box-orange" style="margin-top: 18px;">
+                <h3>How to Add Real Screenshots</h3>
+                <ul>
+                    <li>Take screenshot from Jenkins (Dashboard, Job config, Pipeline view, etc.).</li>
+                    <li>Save as PNG/JPG in a folder like <code>screenshots/</code>.</li>
+                    <li>Replace the placeholder <code>&lt;div class="ss-thumb"&gt;...</code> with:
+                        <div class="code-block">
+&lt;img src="screenshots/jenkins-dashboard.png" alt="Jenkins Dashboard" style="width:100%; border-radius:8px;"&gt;
+                        </div>
+                    </li>
+                    <li>Commit to your repo → your HTML notes will show real Jenkins UI.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Jenkins Mini-Guide • Ready for notes, README, or DevOps interview revision
+    </div>
+</div>
+
+<script>
+    function switchTab(event, sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active');
+
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        event.currentTarget.classList.add('active');
+    }
+
+    function toggleQA(event) {
+        const btn = event.currentTarget;
+        const qaItem = btn.closest('.qa-item');
+        const answer = qaItem.querySelector('.qa-answer');
+        const icon = btn.querySelector('.qa-toggle');
+
+        const isOpen = answer.classList.contains('show');
+
+        document.querySelectorAll('.qa-answer').forEach(a => a.classList.remove('show'));
+        document.querySelectorAll('.qa-toggle').forEach(i => i.classList.remove('rotate'));
+
+        if (!isOpen) {
+            answer.classList.add('show');
+            icon.classList.add('rotate');
+        }
+    }
+</script>
+</body>
+</html>

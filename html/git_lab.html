@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitLab Mini-Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 50%, #f3e5f5 100%);
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3.2em;
+            background: linear-gradient(135deg, #e24329 0%, #fc6d26 50%, #fca326 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.05em;
+            color: #555;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            color: #555;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+        }
+
+        .nav-btn:hover {
+            border-color: #e24329;
+            box-shadow: 0 4px 12px rgba(226, 67, 41, 0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #e24329 0%, #fc6d26 50%, #fca326 100%);
+            color: white;
+            border-color: #b52f1d;
+            box-shadow: 0 6px 20px rgba(226, 67, 41, 0.3);
+        }
+
+        .content {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .content h2 {
+            font-size: 2.2em;
+            color: #1a1a1a;
+            margin-bottom: 25px;
+        }
+
+        .content p {
+            font-size: 1.02em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #e24329;
+        }
+
+        .box {
+            border-left: 4px solid;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .box-orange {
+            border-left-color: #f97316;
+            background-color: #fff7ed;
+        }
+
+        .box-orange h3 {
+            color: #7c2d12;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .box-orange p {
+            color: #92400e;
+        }
+
+        .box-blue {
+            border-left-color: #3b82f6;
+            background-color: #dbeafe;
+        }
+
+        .box-blue h3 {
+            color: #1d4ed8;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .box-blue p {
+            color: #1e3a8a;
+        }
+
+        .box-green {
+            border-left-color: #22c55e;
+            background-color: #dcfce7;
+        }
+
+        .box-green h3 {
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .box-green p {
+            color: #166534;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 16px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 16px 0;
+        }
+
+        .card {
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 0.95em;
+            margin-bottom: 6px;
+        }
+
+        .card-orange {
+            border-color: #f97316;
+            background-color: #fff7ed;
+        }
+
+        .card-purple {
+            border-color: #a855f7;
+            background-color: #faf5ff;
+        }
+
+        .card-blue {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .card-green {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+
+        .card-rose {
+            border-color: #fb7185;
+            background-color: #fff1f2;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+
+        .qa-item {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .qa-item:hover {
+            border-color: #e24329;
+            box-shadow: 0 4px 12px rgba(226, 67, 41, 0.12);
+        }
+
+        .qa-question {
+            background: white;
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #b52f1d;
+            user-select: none;
+            transition: background 0.3s ease;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .qa-question:hover {
+            background: #f3f4f6;
+        }
+
+        .qa-toggle {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+            color: #9ca3af;
+            margin-left: 10px;
+        }
+
+        .qa-answer {
+            display: none;
+            padding: 16px 20px;
+            background: #fff7ed;
+            border-top: 2px solid #fed7aa;
+            color: #4b5563;
+            line-height: 1.7;
+            font-size: 0.96em;
+        }
+
+        .qa-answer.show {
+            display: block;
+        }
+
+        .qa-toggle.rotate {
+            transform: rotate(180deg);
+        }
+
+        .tagline {
+            font-size: 0.95em;
+            color: #6b7280;
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+
+        .code-block {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 16px 18px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 14px 0;
+            line-height: 1.6;
+        }
+
+        .code-block strong {
+            color: #4ade80;
+        }
+
+        .example-box {
+            border-left: 4px solid;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .example-orange {
+            border-left-color: #f97316;
+            background-color: #fff7ed;
+        }
+
+        .example-green {
+            border-left-color: #22c55e;
+            background-color: #dcfce7;
+        }
+
+        .example-purple {
+            border-left-color: #a855f7;
+            background-color: #f5f3ff;
+        }
+
+        .example-box h3 {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .example-box p {
+            font-size: 0.95em;
+            margin-top: 8px;
+        }
+
+        ul {
+            margin-left: 18px;
+            margin-bottom: 10px;
+        }
+
+        ul li {
+            margin-bottom: 6px;
+            font-size: 0.97em;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            color: #9ca3af;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.1em;
+            }
+
+            .content {
+                padding: 22px;
+            }
+
+            .nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>GitLab Mini-Guide</h1>
+        <p>Your compact GitLab notes for DevOps, CI/CD, and interview prep</p>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn active" onclick="switchTab(event, 'overview')">📚 What is GitLab?</button>
+        <button class="nav-btn" onclick="switchTab(event, 'where')">🌍 Where We Use It</button>
+        <button class="nav-btn" onclick="switchTab(event, 'why')">⭐ Why Important</button>
+        <button class="nav-btn" onclick="switchTab(event, 'concepts')">🧠 Concepts & Features</button>
+        <button class="nav-btn" onclick="switchTab(event, 'interview')">📖 Interview Q&A</button>
+        <button class="nav-btn" onclick="switchTab(event, 'examples')">💻 Hands-On Examples</button>
+    </div>
+
+    <div class="content">
+        <!-- OVERVIEW -->
+        <div id="overview" class="section active">
+            <h2>1. What is GitLab?</h2>
+            <p class="tagline">Think of <span class="highlight">Git</span> as the engine and <span class="highlight">GitLab</span> as a full car with dashboard, controls, and automation.</p>
+            <p><strong>GitLab</strong> is a web-based <span class="highlight">DevOps platform</span> built around Git repositories. It provides:</p>
+            <ul>
+                <li>Source code management (Git hosting)</li>
+                <li>Built-in CI/CD (GitLab CI)</li>
+                <li>Issue tracking & Kanban boards</li>
+                <li>Merge Requests (code review)</li>
+                <li>Container & package registry</li>
+                <li>Security & compliance (DevSecOps)</li>
+            </ul>
+
+            <div class="box box-blue">
+                <h3>Git vs GitLab</h3>
+                <p><strong>Git:</strong> Distributed version control tool (CLI on your machine).</p>
+                <p><strong>GitLab:</strong> Web platform built on top of Git with UI, CI/CD, issues, and more.</p>
+            </div>
+
+            <div class="box box-orange">
+                <h3>How You Can Use GitLab</h3>
+                <p><span class="pill">GitLab.com (SaaS)</span> Hosted by GitLab in the cloud.</p>
+                <p><span class="pill">Self-managed GitLab</span> Install GitLab on your own server / VM (on-premise or cloud) for full control.</p>
+            </div>
+        </div>
+
+        <!-- WHERE -->
+        <div id="where" class="section">
+            <h2>2. Where Do We Use GitLab?</h2>
+            <p>GitLab fits anywhere you need code + collaboration + automation in one place.</p>
+
+            <div class="grid-2">
+                <div class="card card-blue">
+                    <h3>👨‍💻 Software Development Teams</h3>
+                    <p>Host private Git repos, perform code reviews with Merge Requests, enforce branch rules.</p>
+                    <p>Run pipelines for unit / integration / security tests.</p>
+                </div>
+
+                <div class="card card-orange">
+                    <h3>⚙️ DevOps & CI/CD Workflows</h3>
+                    <p>Build, test, and deploy apps to dev / staging / production.</p>
+                    <p>Works with VMs, Kubernetes, containers, or bare metal servers.</p>
+                </div>
+
+                <div class="card card-green">
+                    <h3>🏢 Enterprises & Regulated Industries</h3>
+                    <p>Self-host GitLab for security and compliance.</p>
+                    <p>Integrate with LDAP/AD, SSO, and internal tooling.</p>
+                </div>
+
+                <div class="card card-purple">
+                    <h3>🧑‍🎓 Education & Training</h3>
+                    <p>Teachers and students practice Git, branching, and CI/CD with free GitLab.com projects.</p>
+                </div>
+
+                <div class="card card-rose">
+                    <h3>💡 Open Source Projects</h3>
+                    <p>Some projects use GitLab instead of GitHub.</p>
+                    <p>Example: GNOME uses GitLab for code and CI.</p>
+                </div>
+            </div>
+
+            <div class="box box-green">
+                <h3>When GitLab Is a Great Choice</h3>
+                <ul>
+                    <li>You want built-in CI/CD without extra tools like Jenkins.</li>
+                    <li>You need self-hosting to keep code inside the company network.</li>
+                    <li>You prefer “all-in-one DevOps platform” instead of many separate tools.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WHY IMPORTANT -->
+        <div id="why" class="section">
+            <h2>3. Why Is GitLab Important?</h2>
+
+            <div class="grid-3">
+                <div class="card card-orange">
+                    <h3>1️⃣ All-in-One DevOps Platform</h3>
+                    <ul>
+                        <li>Git repo hosting</li>
+                        <li>Merge Requests & code review</li>
+                        <li>CI/CD pipelines</li>
+                        <li>Issues, boards, milestones</li>
+                        <li>Container & package registry</li>
+                        <li>Security scans</li>
+                    </ul>
+                    <p>Less integration headache between separate tools.</p>
+                </div>
+
+                <div class="card card-blue">
+                    <h3>2️⃣ Built-in CI/CD (GitLab CI)</h3>
+                    <ul>
+                        <li>Pipelines defined in <strong>.gitlab-ci.yml</strong></li>
+                        <li>Triggers on push, MR, schedule, tags, etc.</li>
+                        <li>Runs on GitLab Runners (shared or your own).</li>
+                        <li>Stages like build → test → deploy.</li>
+                    </ul>
+                    <p>Code → test → deploy happens inside GitLab.</p>
+                </div>
+
+                <div class="card card-green">
+                    <h3>3️⃣ Strong for Self-Hosting & DevSecOps</h3>
+                    <ul>
+                        <li>Install on your own servers/VMs.</li>
+                        <li>Integrate with enterprise auth (LDAP/AD, SSO).</li>
+                        <li>Security scans: SAST, DAST, dependency, container.</li>
+                        <li>Helps shift security left in the pipeline.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="box box-blue">
+                <h3>4️⃣ Collaboration & Visibility</h3>
+                <ul>
+                    <li>Merge Requests with inline comments.</li>
+                    <li>Issues linked to MRs and milestones.</li>
+                    <li>Boards show To Do → Doing → Done.</li>
+                    <li>CI pipelines and deployments visible per MR.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONCEPTS -->
+        <div id="concepts" class="section">
+            <h2>4. Important GitLab Concepts & Features</h2>
+
+            <div class="grid-2">
+                <div class="card card-blue">
+                    <h3>4.1 Project & Repository</h3>
+                    <p>A <strong>Project</strong> in GitLab includes:</p>
+                    <ul>
+                        <li>Git repository</li>
+                        <li>Issues & boards</li>
+                        <li>Wiki, CI/CD settings</li>
+                        <li>Registry, releases, environments</li>
+                    </ul>
+                    <p>It’s the main unit where you push code and define pipelines.</p>
+                </div>
+
+                <div class="card card-purple">
+                    <h3>4.2 Groups & Subgroups</h3>
+                    <p>A <strong>Group</strong> can contain multiple projects and subgroups.</p>
+                    <p>Useful for:</p>
+                    <ul>
+                        <li>Organising by team, product, or customer.</li>
+                        <li>Managing permissions and policies centrally.</li>
+                    </ul>
+                    <p><strong>Example:</strong> group <code>company-backend</code> with projects <code>auth-service</code>, <code>payment-service</code>, etc.</p>
+                </div>
+
+                <div class="card card-orange">
+                    <h3>4.3 Branches & Merge Requests (MRs)</h3>
+                    <p><strong>Branches:</strong> <code>main</code>, <code>dev</code>, <code>feature/login-api</code>, etc.</p>
+                    <p><strong>MR (Merge Request):</strong> GitLab’s name for Pull Request.</p>
+                    <p>Typical flow:</p>
+                    <ul>
+                        <li>Create branch → commit changes → push.</li>
+                        <li>Open MR to <code>main</code>.</li>
+                        <li>CI pipeline runs; reviewers check code + tests.</li>
+                        <li>After approval, MR is merged.</li>
+                    </ul>
+                </div>
+
+                <div class="card card-green">
+                    <h3>4.4 GitLab CI/CD Basics</h3>
+                    <p>Controlled by <strong>.gitlab-ci.yml</strong> in repo root.</p>
+                    <ul>
+                        <li><strong>Pipeline</strong> – full CI run per push/MR.</li>
+                        <li><strong>Stages</strong> – build, test, deploy.</li>
+                        <li><strong>Jobs</strong> – tasks that run in stages.</li>
+                        <li><strong>Runners</strong> – agents that execute jobs.</li>
+                    </ul>
+                    <p>Jobs in the same stage run in parallel; stages run in order.</p>
+                </div>
+
+                <div class="card card-blue">
+                    <h3>4.5 GitLab Runner</h3>
+                    <p>A <strong>Runner</strong> is a separate agent that pulls jobs from GitLab and executes them.</p>
+                    <ul>
+                        <li>Installed on a VM, laptop, or Kubernetes cluster.</li>
+                        <li>Types: shell, Docker, Kubernetes executors.</li>
+                        <li>Can be <strong>shared</strong> (many projects) or <strong>specific</strong> (one project/group).</li>
+                    </ul>
+                </div>
+
+                <div class="card card-rose">
+                    <h3>4.6 Container & Package Registry</h3>
+                    <p><strong>Container Registry:</strong> Store Docker images like:</p>
+                    <p><code>registry.gitlab.com/group/project/image:tag</code></p>
+                    <p><strong>Package Registry:</strong> Host private npm, Maven, PyPI, etc.</p>
+                    <p>Useful for internal images and packages.</p>
+                </div>
+            </div>
+
+            <div class="box box-orange">
+                <h3>4.7 Issues, Boards & Milestones</h3>
+                <ul>
+                    <li><strong>Issues</strong> – tasks, bugs, feature requests.</li>
+                    <li><strong>Boards</strong> – Kanban: To Do → Doing → Done.</li>
+                    <li><strong>Milestones</strong> – group issues for a release/sprint.</li>
+                </ul>
+                <p>This allows you to manage project planning and tracking inside GitLab itself.</p>
+            </div>
+
+            <div class="box box-blue">
+                <h3>4.8 Protected Branches & Approvals (Bonus for Interviews)</h3>
+                <ul>
+                    <li>Protect branches like <code>main</code> / <code>production</code>.</li>
+                    <li>Only certain roles can push or merge to them.</li>
+                    <li>Require approvals and passing pipelines before merge.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- INTERVIEW Q&A -->
+        <div id="interview" class="section">
+            <h2>5. GitLab Interview Questions & Answers</h2>
+            <p class="tagline">Use these as quick revision before a DevOps / GitLab round.</p>
+
+            <!-- Q1 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q1. What is GitLab?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    GitLab is a web-based DevOps platform built around Git repositories. It provides
+                    source code management, built-in CI/CD pipelines, issue tracking, registries, and
+                    security features, allowing teams to manage the entire software development lifecycle
+                    in a single tool.
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q2. What is the difference between Git and GitLab?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Git</strong> is a distributed version control system you install locally to track code history and collaborate using branches and commits.</li>
+                        <li><strong>GitLab</strong> is a platform that hosts Git repositories and adds a web UI, CI/CD, issue tracking, merge requests, registries, and more.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q3. How is GitLab different from GitHub?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Both host Git repos and support collaboration. GitLab’s key differences:
+                    <ul>
+                        <li>GitLab has tightly integrated, built-in CI/CD (GitLab CI) using <code>.gitlab-ci.yml</code>.</li>
+                        <li>GitLab is widely used for self-hosted, enterprise DevOps platforms.</li>
+                        <li>GitHub is extremely popular for open-source; GitLab also supports open source but positions itself as a “complete DevOps platform”.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q4. What is GitLab CI/CD?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    GitLab CI/CD is the built-in continuous integration and delivery/deployment system in GitLab.
+                    Pipelines are defined in <code>.gitlab-ci.yml</code>, and GitLab automatically runs jobs on
+                    runners when code is pushed, merge requests are created, or schedules are triggered.
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q5. What is <code>.gitlab-ci.yml</code>?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <code>.gitlab-ci.yml</code> is a YAML configuration file stored in the root of your repository.
+                    It defines:
+                    <ul>
+                        <li>Pipeline stages (e.g., <code>build</code>, <code>test</code>, <code>deploy</code>)</li>
+                        <li>Jobs and the scripts they run</li>
+                        <li>Images, artifacts, caches, variables</li>
+                        <li>Rules and conditions for running jobs</li>
+                    </ul>
+                    GitLab reads this file to know which jobs to run and in what order.
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q6. What is a GitLab Runner?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    A GitLab Runner is an agent/service that executes CI/CD jobs for GitLab. It connects to a GitLab instance,
+                    picks up jobs defined in <code>.gitlab-ci.yml</code>, runs them (via shell, Docker, or Kubernetes), and
+                    sends logs and status back to GitLab.
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q7. What is the difference between a shared runner and a specific runner?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Shared runner:</strong> Available to multiple projects or the whole instance. Good for general workloads shared by many teams.</li>
+                        <li><strong>Specific runner:</strong> Assigned to a particular project or group. Used when jobs need special tools, higher isolation, or dedicated capacity.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q8. Explain stages and jobs in GitLab CI.</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Stages</strong> are logical steps in a pipeline, such as <code>build</code>, <code>test</code>, <code>deploy</code>. Stages run in sequence.</li>
+                        <li><strong>Jobs</strong> are individual tasks within stages. All jobs in a stage run in parallel by default. The pipeline moves to the next stage only when all jobs in the current stage succeed (unless configured otherwise).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q9. Show a simple pipeline example in <code>.gitlab-ci.yml</code>.</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <pre class="code-block">
+stages:
+  - build
+  - test
+
+build_job:
+  stage: build
+  script:
+    - echo "Building the app"
+
+test_job:
+  stage: test
+  script:
+    - echo "Running tests"
+                    </pre>
+                    This defines two stages (<code>build</code> and <code>test</code>) and one job per stage.
+                </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q10. What are artifacts in GitLab CI?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Artifacts are files produced by a job (e.g., build outputs, test reports, coverage reports) that GitLab stores
+                    after the job finishes. They can be:
+                    <ul>
+                        <li>Downloaded from the pipeline UI.</li>
+                        <li>Used by later jobs in the pipeline.</li>
+                    </ul>
+                    Example:
+                    <pre class="code-block">
+build_job:
+  stage: build
+  script:
+    - make build
+  artifacts:
+    paths:
+      - build/
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Q11 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q11. What are environments and deployments in GitLab?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <strong>Environments</strong> represent where your application runs (e.g., dev, staging, production).
+                    Deployment jobs in GitLab CI target a specific environment. GitLab tracks:
+                    <ul>
+                        <li>Last deployment per environment</li>
+                        <li>Who deployed and when</li>
+                        <li>History and status of environments</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q12 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q12. How do you use variables in GitLab CI?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Variables can be defined:
+                    <ul>
+                        <li>In <code>.gitlab-ci.yml</code> under <code>variables:</code></li>
+                        <li>In project/group settings → CI/CD → Variables (useful for secrets)</li>
+                    </ul>
+                    Example:
+                    <pre class="code-block">
+variables:
+  APP_ENV: "production"
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to $APP_ENV"
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Q13 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q13. How do you handle secrets in GitLab CI?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>Store secrets as CI/CD variables in project/group settings (masked & protected).</li>
+                        <li>Use them in jobs as environment variables, e.g., <code>$DB_PASSWORD</code>.</li>
+                        <li>Never hard-code secrets in <code>.gitlab-ci.yml</code> or source code.</li>
+                        <li>Optionally integrate with external secret managers like HashiCorp Vault or cloud KMS.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q14 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q14. Can GitLab be self-hosted? Why would a company do that?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Yes. GitLab has a self-managed edition that can be installed on company servers or cloud VMs. Reasons to self-host:
+                    <ul>
+                        <li>Keep source code and pipelines inside the private network.</li>
+                        <li>Meet regulatory and compliance requirements.</li>
+                        <li>Control upgrades, configuration, and integrations.</li>
+                        <li>Use internal authentication (LDAP/AD, SSO).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q15 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q15. Describe a basic GitLab CI workflow for a web app.</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Typical workflow:
+                    <ul>
+                        <li>Developer pushes code to a feature branch → pipeline runs (build + tests).</li>
+                        <li>Developer opens a Merge Request to <code>main</code> → pipeline runs again.</li>
+                        <li>Reviewers check the MR, code, and pipeline results; approvals are given.</li>
+                        <li>After merge to <code>main</code>, another pipeline runs with a deploy job that deploys to staging or production.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAMPLES -->
+        <div id="examples" class="section">
+            <h2>6. Hands-On GitLab Examples & Tutorials</h2>
+            <p class="tagline">You can try all of this on <span class="highlight">GitLab.com (free)</span> with your friends.</p>
+
+            <!-- Example 1 -->
+            <div class="example-box example-orange">
+                <h3>Example 1: Create a Project & Push Code</h3>
+                <p><strong>Step 1 – Create a project on GitLab</strong></p>
+                <ul>
+                    <li>Log in to GitLab.</li>
+                    <li>Click <strong>New project</strong> → <strong>Create blank project</strong>.</li>
+                    <li>Name it <code>gitlab-demo</code>, choose visibility, and create.</li>
+                    <li>Copy the HTTPS URL, e.g. <code>https://gitlab.com/your-username/gitlab-demo.git</code></li>
+                </ul>
+                <p><strong>Step 2 – Clone and push code</strong></p>
+                <pre class="code-block">
+git clone https://gitlab.com/your-username/gitlab-demo.git
+cd gitlab-demo
+
+# app.py
+def add(a, b):
+    return a + b
+
+if __name__ == "__main__":
+    print(add(2, 3))
+
+git add app.py
+git commit -m "Add simple add function"
+git push origin main
+                </pre>
+                <p>Now your code is stored in GitLab.</p>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="example-box example-green">
+                <h3>Example 2: Basic GitLab CI Pipeline (.gitlab-ci.yml)</h3>
+                <p>Create <code>.gitlab-ci.yml</code> in the project root:</p>
+                <pre class="code-block">
+stages:
+  - test
+
+test_python:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - python --version
+    - python app.py
+                </pre>
+                <p>
+                    Commit and push this file. GitLab will detect <code>.gitlab-ci.yml</code>, start a pipeline,
+                    run a Python container, and execute your script. Check it under <strong>CI/CD → Pipelines</strong>.
+                </p>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="example-box example-purple">
+                <h3>Example 3: Pytest Integration (Real CI)</h3>
+                <p><strong>Step 1 – Add a test</strong> (<code>test_app.py</code>):</p>
+                <pre class="code-block">
+from app import add
+
+def test_add():
+    assert add(2, 3) == 5
+                </pre>
+                <p><strong>Step 2 – Update <code>.gitlab-ci.yml</code>:</strong></p>
+                <pre class="code-block">
+stages:
+  - test
+
+pytest_job:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - pip install pytest
+    - pytest
+                </pre>
+                <p>
+                    Push your changes. Now every push runs <strong>pytest</strong> automatically –
+                    this is real Continuous Integration.
+                </p>
+            </div>
+
+            <!-- Example 4 -->
+            <div class="example-box example-orange">
+                <h3>Example 4: Multi-stage Pipeline with Artifacts</h3>
+                <pre class="code-block">
+stages:
+  - build
+  - test
+
+build_job:
+  stage: build
+  image: python:3.12-slim
+  script:
+    - echo "Simulating build step"
+    - mkdir build
+    - echo "Build artifact" > build/output.txt
+  artifacts:
+    paths:
+      - build/
+
+test_job:
+  stage: test
+  image: python:3.12-slim
+  dependencies:
+    - build_job
+  script:
+    - ls -R
+    - cat build/output.txt
+    - echo "Running tests here"
+                </pre>
+                <p>
+                    <strong>build_job</strong> creates an artifact in <code>build/</code>.  
+                    <strong>test_job</strong> depends on it and reads that file – this shows how artifacts move between stages.
+                </p>
+            </div>
+
+            <!-- Example 5 -->
+            <div class="example-box example-green">
+                <h3>Example 5: Basic Docker Build in GitLab CI (Concept)</h3>
+                <p>For a project with Container Registry enabled and a Docker executor runner:</p>
+                <pre class="code-block">
+stages:
+  - build
+
+docker_build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+                </pre>
+                <p>This builds a Docker image and pushes it to GitLab’s Container Registry for that project.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        GitLab Mini-Guide • Perfect for notes, README, or quick interview revision
+    </div>
+</div>
+
+<script>
+    function switchTab(event, sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active');
+
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        event.currentTarget.classList.add('active');
+    }
+
+    function toggleQA(event) {
+        const questionBtn = event.currentTarget;
+        const qaItem = questionBtn.closest('.qa-item');
+        const answer = qaItem.querySelector('.qa-answer');
+        const icon = questionBtn.querySelector('.qa-toggle');
+
+        const isOpen = answer.classList.contains('show');
+
+        // Close all others
+        document.querySelectorAll('.qa-answer').forEach(a => a.classList.remove('show'));
+        document.querySelectorAll('.qa-toggle').forEach(i => i.classList.remove('rotate'));
+
+        if (!isOpen) {
+            answer.classList.add('show');
+            icon.classList.add('rotate');
+        }
+    }
+</script>
+</body>
+</html>

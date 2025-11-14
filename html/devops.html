@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Mini-Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 50%, #f3e5f5 100%);
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            color: #555;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .nav-btn:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #2563eb 0%, #9333ea 100%);
+            color: white;
+            border-color: #1e40af;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .content {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .content h2 {
+            font-size: 2.5em;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+
+        .content p {
+            font-size: 1.05em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .box {
+            border-left: 4px solid;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .box-red {
+            border-left-color: #ef4444;
+            background-color: #fee2e2;
+        }
+
+        .box-red h3 {
+            color: #7f1d1d;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .box-red p {
+            color: #991b1b;
+            margin: 8px 0;
+        }
+
+        .box-green {
+            border-left-color: #22c55e;
+            background-color: #dcfce7;
+        }
+
+        .box-green h3 {
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .box-green p {
+            color: #166534;
+            margin: 8px 0;
+        }
+
+        .box-blue {
+            border-left-color: #3b82f6;
+            background-color: #dbeafe;
+        }
+
+        .box-blue h3 {
+            color: #1e40af;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .box-blue p {
+            color: #1e3a8a;
+            margin: 8px 0;
+        }
+
+        .box-yellow {
+            border-left-color: #eab308;
+            background-color: #fef08a;
+        }
+
+        .box-yellow h3 {
+            color: #713f12;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .box-yellow p {
+            color: #854d0e;
+            margin: 8px 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-blue {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        .card-blue h3 {
+            color: #1e40af;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-blue p {
+            color: #1e3a8a;
+            font-size: 0.95em;
+        }
+
+        .card-purple {
+            border-color: #9333ea;
+            background-color: #faf5ff;
+        }
+
+        .card-purple h3 {
+            color: #581c87;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-purple p {
+            color: #6b21a8;
+            font-size: 0.95em;
+        }
+
+        .card-pink {
+            border-color: #ec4899;
+            background-color: #fdf2f8;
+        }
+
+        .card-pink h3 {
+            color: #831843;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-pink p {
+            color: #be185d;
+            font-size: 0.95em;
+        }
+
+        .card-green {
+            border-color: #22c55e;
+            background-color: #f0fdf4;
+        }
+
+        .card-green h3 {
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-green p {
+            color: #166534;
+            font-size: 0.95em;
+        }
+
+        .card-orange {
+            border-color: #f97316;
+            background-color: #fff7ed;
+        }
+
+        .card-orange h3 {
+            color: #7c2d12;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-orange p {
+            color: #92400e;
+            font-size: 0.95em;
+        }
+
+        .card-indigo {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+
+        .card-indigo h3 {
+            color: #312e81;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-indigo p {
+            color: #3730a3;
+            font-size: 0.95em;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .benefit-card {
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .benefit-card.blue {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        }
+
+        .benefit-card.blue h3 {
+            color: #1e40af;
+        }
+
+        .benefit-card.blue li {
+            color: #1e3a8a;
+        }
+
+        .benefit-card.purple {
+            border-color: #9333ea;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        }
+
+        .benefit-card.purple h3 {
+            color: #581c87;
+        }
+
+        .benefit-card.purple li {
+            color: #6b21a8;
+        }
+
+        .benefit-card.green {
+            border-color: #22c55e;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .benefit-card.green h3 {
+            color: #15803d;
+        }
+
+        .benefit-card.green li {
+            color: #166534;
+        }
+
+        .benefit-card h3 {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .benefit-card ul {
+            list-style: none;
+        }
+
+        .benefit-card li {
+            margin: 8px 0;
+            font-size: 0.95em;
+        }
+
+        .lifecycle-item {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .lifecycle-item:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .lifecycle-item h3 {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .lifecycle-item p {
+            font-size: 0.95em;
+            color: #666;
+            margin: 8px 0;
+        }
+
+        .lifecycle-item.stage-1 { border-color: #3b82f6; }
+        .lifecycle-item.stage-2 { border-color: #9333ea; }
+        .lifecycle-item.stage-3 { border-color: #ec4899; }
+        .lifecycle-item.stage-4 { border-color: #f97316; }
+        .lifecycle-item.stage-5 { border-color: #22c55e; }
+        .lifecycle-item.stage-6 { border-color: #6366f1; }
+        .lifecycle-item.stage-7 { border-color: #ef4444; }
+        .lifecycle-item.stage-8 { border-color: #06b6d4; }
+
+        .qa-item {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .qa-item:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .qa-question {
+            background: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #1e40af;
+            user-select: none;
+            transition: background 0.3s ease;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .qa-question:hover {
+            background: #f3f4f6;
+        }
+
+        .qa-toggle {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+            color: #999;
+            margin-left: 10px;
+        }
+
+        .qa-answer {
+            display: none;
+            padding: 20px;
+            background: #eff6ff;
+            border-top: 2px solid #dbeafe;
+            color: #1e3a8a;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .qa-answer.show {
+            display: block;
+        }
+
+        .qa-toggle.rotate {
+            transform: rotate(180deg);
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #4ade80;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .example-box {
+            border-left: 4px solid;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .example-blue {
+            border-left-color: #3b82f6;
+            background-color: #dbeafe;
+        }
+
+        .example-purple {
+            border-left-color: #9333ea;
+            background-color: #f3e8ff;
+        }
+
+        .example-green {
+            border-left-color: #22c55e;
+            background-color: #dcfce7;
+        }
+
+        .example-orange {
+            border-left-color: #f97316;
+            background-color: #fed7aa;
+        }
+
+        .example-box h3 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .example-box p {
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DevOps Mini-Guide</h1>
+            <p>Your complete guide to DevOps practices, tools, and interview prep</p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="switchTab(event, 'what')">📚 What is DevOps?</button>
+            <button class="nav-btn" onclick="switchTab(event, 'where')">⚡ Where We Use It</button>
+            <button class="nav-btn" onclick="switchTab(event, 'why')">👥 Why Important</button>
+            <button class="nav-btn" onclick="switchTab(event, 'lifecycle')">📊 Lifecycle</button>
+            <button class="nav-btn" onclick="switchTab(event, 'interview')">📖 Interview Q&A</button>
+            <button class="nav-btn" onclick="switchTab(event, 'examples')">💻 Examples</button>
+        </div>
+
+        <div class="content">
+            <div id="what" class="section active">
+                <h2>What is DevOps?</h2>
+                <p>DevOps = Development (Dev) + Operations (Ops) working together using automation, tools, and processes to deliver software faster, more reliably, and continuously.</p>
+                
+                <div class="box box-red">
+                    <h3>Traditional Approach (Siloed)</h3>
+                    <p><strong>Developers:</strong> Write code, throw it over the wall</p>
+                    <p><strong>Operations:</strong> Deploy, maintain, handle crashes</p>
+                    <p><strong>Result:</strong> Silos, delays, slow releases</p>
+                </div>
+
+                <div class="box box-green">
+                    <h3>DevOps Approach (Unified)</h3>
+                    <p>✓ One combined or tightly aligned team</p>
+                    <p>✓ Shared responsibility throughout the pipeline</p>
+                    <p>✓ Heavy automation: CI/CD, IaC, monitoring</p>
+                    <p>✓ Small, frequent changes instead of big releases</p>
+                </div>
+
+                <div class="box box-blue">
+                    <h3>Key Principles</h3>
+                    <p><strong>Collaboration:</strong> Dev, Ops, QA, Security work as one team</p>
+                    <p><strong>Automation:</strong> CI/CD, Infrastructure as Code</p>
+                    <p><strong>Continuous Integration:</strong> Frequent code pushes and auto tests</p>
+                    <p><strong>Continuous Delivery/Deployment:</strong> Always deployable</p>
+                    <p><strong>Infrastructure as Code:</strong> Version control for infrastructure</p>
+                    <p><strong>Monitoring:</strong> Logs, metrics, continuous improvement</p>
+                </div>
+            </div>
+
+            <div id="where" class="section">
+                <h2>Where We Use DevOps</h2>
+                <div class="grid-2">
+                    <div class="card card-blue">
+                        <h3>Web Applications</h3>
+                        <p>Websites, dashboards on cloud platforms</p>
+                    </div>
+                    <div class="card card-purple">
+                        <h3>Mobile Backends</h3>
+                        <p>APIs for Android/iOS apps</p>
+                    </div>
+                    <div class="card card-pink">
+                        <h3>Microservices</h3>
+                        <p>Multiple small services with Kubernetes</p>
+                    </div>
+                    <div class="card card-orange">
+                        <h3>Data/ML Pipelines</h3>
+                        <p>MLOps for training and deployment</p>
+                    </div>
+                    <div class="card card-green">
+                        <h3>Enterprise Systems</h3>
+                        <p>Banking, government, healthcare</p>
+                    </div>
+                    <div class="card card-indigo">
+                        <h3>Hybrid Cloud</h3>
+                        <p>Consistency across environments</p>
+                    </div>
+                </div>
+                
+                <div class="box box-yellow">
+                    <h3>When to Use DevOps</h3>
+                    <p>✓ Need frequent releases</p>
+                    <p>✓ Many developers working together</p>
+                    <p>✓ Critical systems that must stay online</p>
+                    <p>✓ Scalable systems needed</p>
+                    <p>✓ Multiple environments</p>
+                </div>
+            </div>
+
+            <div id="why" class="section">
+                <h2>Why DevOps is Important</h2>
+                <div class="grid-3">
+                    <div class="benefit-card blue">
+                        <h3>Business Benefits</h3>
+                        <ul>
+                            <li>⚡ Faster time to market</li>
+                            <li>🛡️ Higher reliability</li>
+                            <li>⏰ Reduced downtime</li>
+                            <li>✅ Better quality</li>
+                        </ul>
+                    </div>
+                    <div class="benefit-card purple">
+                        <h3>Technical Benefits</h3>
+                        <ul>
+                            <li>🤖 Automation reduces manual work</li>
+                            <li>📦 Repeatable environments</li>
+                            <li>📈 Easier scaling</li>
+                            <li>🔧 Infrastructure as Code</li>
+                        </ul>
+                    </div>
+                    <div class="benefit-card green">
+                        <h3>Team Benefits</h3>
+                        <ul>
+                            <li>👥 Less blame, more ownership</li>
+                            <li>👀 Better visibility</li>
+                            <li>📊 Shared dashboards</li>
+                            <li>🔄 Continuous improvement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lifecycle" class="section">
+                <h2>DevOps Lifecycle &amp; Tools</h2>
+                
+                <div class="lifecycle-item stage-1">
+                    <h3>1. Plan</h3>
+                    <p><strong>Tools:</strong> Jira, Trello, GitHub Projects</p>
+                    <p>Define requirements and create tasks</p>
+                </div>
+
+                <div class="lifecycle-item stage-2">
+                    <h3>2. Code</h3>
+                    <p><strong>Tools:</strong> Git, GitHub, GitLab</p>
+                    <p>Branches, PRs, code reviews</p>
+                </div>
+
+                <div class="lifecycle-item stage-3">
+                    <h3>3. Build</h3>
+                    <p><strong>Tools:</strong> Maven, Gradle, npm, Docker</p>
+                    <p>Compile and package application</p>
+                </div>
+
+                <div class="lifecycle-item stage-4">
+                    <h3>4. Test</h3>
+                    <p><strong>Tools:</strong> JUnit, PyTest, Selenium</p>
+                    <p>Unit, integration, security tests</p>
+                </div>
+
+                <div class="lifecycle-item stage-5">
+                    <h3>5. Release</h3>
+                    <p><strong>Tools:</strong> GitHub Releases, Artifactory</p>
+                    <p>Version tagging and packaging</p>
+                </div>
+
+                <div class="lifecycle-item stage-6">
+                    <h3>6. Deploy</h3>
+                    <p><strong>Tools:</strong> Jenkins, GitHub Actions, ArgoCD</p>
+                    <p>Move to dev, QA, staging, production</p>
+                </div>
+
+                <div class="lifecycle-item stage-7">
+                    <h3>7. Operate</h3>
+                    <p><strong>Tools:</strong> Kubernetes, Docker, systemd</p>
+                    <p>Keep systems running smoothly</p>
+                </div>
+
+                <div class="lifecycle-item stage-8">
+                    <h3>8. Monitor</h3>
+                    <p><strong>Tools:</strong> Prometheus, Grafana, ELK, CloudWatch</p>
+                    <p>Logs, metrics, traces</p>
+                </div>
+
+                <p style="text-align: center; margin-top: 30px; font-style: italic; color: #999;">This forms an infinite loop of continuous improvement</p>
+            </div>
+
+            <div id="interview" class="section">
+                <h2>Interview Questions &amp; Answers</h2>
+                
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q1. What is DevOps?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">DevOps is a culture and set of practices that bring development and operations together, using automation, CI/CD, and collaboration to deliver software faster, more reliably, and continuously.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q2. How is DevOps different from Agile?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Agile focuses on the development process. DevOps focuses on build, test, deploy, and operations. They complement each other: Agile on process, DevOps on delivery and operations.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q3. What is CI/CD?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">CI (Continuous Integration): Developers merge code frequently. Each merge triggers automated build and tests. CD (Continuous Delivery/Deployment): Code is always ready for deployment after tests pass, or auto-deployed to production.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q4. What is Infrastructure as Code?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">IaC means managing infrastructure (servers, networks, databases) with code files instead of manual steps. Tools: Terraform, CloudFormation, Ansible. Allows versioning, repeatability, and automation.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q5. Continuous Delivery vs Deployment?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Continuous Delivery: System always deployable, but manual approval needed for production. Continuous Deployment: Every change that passes tests is automatically deployed to production with no manual gate.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q6. Container vs Virtual Machine?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Container: Lightweight, shares OS kernel, starts in seconds (Docker). VM: Full OS on hypervisor, heavier, more resource usage, slower to start.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q7. What is Docker?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Docker is a platform that packages application and dependencies into a container image that runs consistently across all environments.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q8. What is Kubernetes?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Kubernetes is a container orchestration platform that automates deployment, scaling, and management of containerized applications across multiple machines.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q9. What is Blue-Green Deployment?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Two production environments: Blue (current) and Green (new). Deploy to Green, test it, then switch traffic from Blue to Green. Quick rollback if issues occur.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q10. What is Canary Deployment?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Deploy new version to a small percentage of users first (e.g., 5%). If everything looks good, gradually increase traffic to 100%.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q11. What is Configuration Management?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Managing system configurations in a consistent state (packages, services, files, users). Tools: Ansible, Puppet, Chef, SaltStack.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q12. What is Observability?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Ability to understand system internal state based on logs, metrics, and traces. Makes debugging easier and improves performance.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q13. What is GitOps?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Git is the single source of truth for application and infrastructure configurations. A controller continuously reconciles the actual environment with Git definitions.</div>
+                </div>
+
+                <div class="qa-item">
+                    <button class="qa-question" onclick="toggleQA(event)">
+                        <span>Q14. How to handle secrets in DevOps?</span>
+                        <span class="qa-toggle">▼</span>
+                    </button>
+                    <div class="qa-answer">Never hardcode secrets. Use tools like AWS Secrets Manager, HashiCorp Vault, or Kubernetes Secrets (encrypted). Limit access via IAM/roles.</div>
+                </div>
+            </div>
+
+            <div id="examples" class="section">
+                <h2>Hands-On Examples</h2>
+                
+                <div class="example-box example-blue">
+                    <h3>Example 1: GitHub Actions CI</h3>
+                    <div class="code-block">
+                        name: Python CI<br>
+                        on: [push, pull_request]<br>
+                        jobs:<br>
+                        &nbsp;&nbsp;build:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;runs-on: ubuntu-latest<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;steps:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- run: python -m pytest
+                    </div>
+                    <p>Every push or pull request triggers this workflow and runs your Python tests automatically.</p>
+                </div>
+
+                <div class="example-box example-green">
+                    <h3>Example 2: Simple Dockerfile</h3>
+                    <div class="code-block">
+                        FROM python:3.11-slim<br>
+                        WORKDIR /app<br>
+                        COPY . /app<br>
+                        RUN pip install -r requirements.txt<br>
+                        CMD ["python", "app.py"]
+                    </div>
+                    <p>Build with <code>docker build -t myapp .</code> and run with <code>docker run -p 8000:8000 myapp</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            DevOps Mini-Guide • Built for quick revision &amp; interview prep
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // Show selected
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.classList.add('active');
+            }
+
+            // Remove active from all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Set active on clicked button
+            event.currentTarget.classList.add('active');
+        }
+
+        function toggleQA(event) {
+            const questionBtn = event.currentTarget;
+            const qaItem = questionBtn.closest('.qa-item');
+            const answer = qaItem.querySelector('.qa-answer');
+            const icon = questionBtn.querySelector('.qa-toggle');
+
+            const isOpen = answer.classList.contains('show');
+
+            // Optional: close all others first
+            document.querySelectorAll('.qa-answer').forEach(a => a.classList.remove('show'));
+            document.querySelectorAll('.qa-toggle').forEach(i => i.classList.remove('rotate'));
+
+            if (!isOpen) {
+                answer.classList.add('show');
+                icon.classList.add('rotate');
+            }
+        }
+    </script>
+</body>
+</html>

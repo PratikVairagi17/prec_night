@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAML Mini-Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 50%, #f5f3ff 100%);
+            color: #0f172a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.05em;
+            color: #475569;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            background: #ffffff;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #a855f7 100%);
+            color: #ffffff;
+            border-color: #0369a1;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .content {
+            background: #ffffff;
+            border-radius: 14px;
+            border: 2px solid #e5e7eb;
+            padding: 34px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 2.1em;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        p {
+            font-size: 0.99em;
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .highlight {
+            color: #0ea5e9;
+            font-weight: 600;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        ul li {
+            margin-bottom: 6px;
+            font-size: 0.97em;
+        }
+
+        .box {
+            border-left: 4px solid;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 18px 0;
+        }
+
+        .box-blue {
+            border-left-color: #0ea5e9;
+            background-color: #e0f2fe;
+        }
+
+        .box-green {
+            border-left-color: #22c55e;
+            background-color: #dcfce7;
+        }
+
+        .box-purple {
+            border-left-color: #8b5cf6;
+            background-color: #ede9fe;
+        }
+
+        .box-amber {
+            border-left-color: #f59e0b;
+            background-color: #fef3c7;
+        }
+
+        .box h3 {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 16px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin: 16px 0;
+        }
+
+        .card {
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            padding: 16px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.08em;
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .card p {
+            font-size: 0.95em;
+            margin-bottom: 6px;
+        }
+
+        .card-blue { border-color: #0ea5e9; background-color: #e0f2fe; }
+        .card-green { border-color: #22c55e; background-color: #ecfdf5; }
+        .card-purple { border-color: #8b5cf6; background-color: #f5f3ff; }
+        .card-amber { border-color: #f59e0b; background-color: #fffbeb; }
+        .card-rose { border-color: #fb7185; background-color: #fff1f2; }
+
+        .pill {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 0.78em;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .code-block {
+            background: #020617;
+            color: #e5e7eb;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-family: "Courier New", monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 10px 0 14px;
+            line-height: 1.6;
+        }
+
+        .code-block .key {
+            color: #7dd3fc;
+        }
+
+        .code-block .str {
+            color: #fbbf24;
+        }
+
+        .code-block .num {
+            color: #6ee7b7;
+        }
+
+        .code-block .bool {
+            color: #f97316;
+        }
+
+        .code-block .comm {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .split-compare {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .compare-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+
+        .table-like {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 0.9em;
+        }
+
+        .table-like th,
+        .table-like td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .table-like th {
+            background-color: #eff6ff;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .table-like td {
+            background-color: #ffffff;
+            color: #4b5563;
+        }
+
+        .qa-item {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .qa-item:hover {
+            border-color: #6366f1;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
+        }
+
+        .qa-question {
+            background: #ffffff;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4338ca;
+        }
+
+        .qa-question:hover {
+            background: #f9fafb;
+        }
+
+        .qa-toggle {
+            font-size: 1.2em;
+            color: #9ca3af;
+            transition: transform 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .qa-toggle.rotate {
+            transform: rotate(180deg);
+        }
+
+        .qa-answer {
+            display: none;
+            padding: 14px 18px;
+            background: #eef2ff;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.95em;
+            color: #374151;
+        }
+
+        .qa-answer.show {
+            display: block;
+        }
+
+        .example-box {
+            border-left: 4px solid;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 18px 0;
+        }
+
+        .example-blue { border-left-color: #0ea5e9; background-color: #e0f2fe; }
+        .example-green { border-left-color: #22c55e; background-color: #dcfce7; }
+        .example-purple { border-left-color: #8b5cf6; background-color: #ede9fe; }
+        .example-amber { border-left-color: #f59e0b; background-color: #fef3c7; }
+
+        .example-box h3 {
+            font-size: 1.05em;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+
+            .content {
+                padding: 22px;
+            }
+
+            .nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>YAML Mini-Guide</h1>
+        <p>Your compact YAML guide for DevOps, Kubernetes, CI/CD & interview prep</p>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn active" onclick="switchTab(event, 'what')">📚 What is YAML?</button>
+        <button class="nav-btn" onclick="switchTab(event, 'where')">🌍 Where We Use It</button>
+        <button class="nav-btn" onclick="switchTab(event, 'why')">⭐ Why Important</button>
+        <button class="nav-btn" onclick="switchTab(event, 'basics')">🧩 YAML Basics & Syntax</button>
+        <button class="nav-btn" onclick="switchTab(event, 'interview')">📖 Interview Q&A</button>
+        <button class="nav-btn" onclick="switchTab(event, 'examples')">💻 Hands-On Examples</button>
+        <button class="nav-btn" onclick="switchTab(event, 'compare')">📊 YAML vs JSON vs XML</button>
+    </div>
+
+    <div class="content">
+
+        <!-- WHAT -->
+        <div id="what" class="section active">
+            <h2>1. What is YAML?</h2>
+            <p class="tagline">
+                YAML = <span class="highlight">“YAML Ain’t Markup Language”</span> – it’s a human-friendly format for
+                configuration and data.
+            </p>
+            <p>
+                <strong>YAML</strong> is a human-readable data serialization format used to write configuration files
+                and structured data. It is conceptually similar to JSON, but:
+            </p>
+            <ul>
+                <li>More readable for humans</li>
+                <li>Uses indentation instead of <code>{ }</code> and <code>[ ]</code></li>
+                <li>Very popular for configuration in DevOps, CI/CD, Kubernetes, Docker, etc.</li>
+            </ul>
+
+            <div class="grid-2">
+                <div>
+                    <div class="compare-title">JSON Example</div>
+                    <div class="code-block">
+<span class="key">{</span><br>
+  <span class="str">"name"</span>: <span class="str">"pratik"</span>,<br>
+  <span class="str">"role"</span>: <span class="str">"devops learner"</span>,<br>
+  <span class="str">"skills"</span>: [<span class="str">"git"</span>, <span class="str">"docker"</span>, <span class="str">"linux"</span>],<br>
+  <span class="str">"experience"</span>: {<br>
+    <span class="str">"years"</span>: <span class="num">2</span>,<br>
+    <span class="str">"domain"</span>: <span class="str">"IT support"</span><br>
+  }<br>
+<span class="key">}</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="compare-title">YAML Example (same data)</div>
+                    <div class="code-block">
+name: pratik<br>
+role: devops learner<br>
+skills:<br>
+  - git<br>
+  - docker<br>
+  - linux<br>
+experience:<br>
+  years: 2<br>
+  domain: IT support
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-blue">
+                <h3>Key Idea</h3>
+                <p>YAML is easier for humans to read and write – especially in big configuration files.</p>
+            </div>
+        </div>
+
+        <!-- WHERE -->
+        <div id="where" class="section">
+            <h2>2. Where Do We Use YAML?</h2>
+            <p>YAML is everywhere in modern <span class="highlight">DevOps, SRE, cloud, and CI/CD</span>.</p>
+
+            <div class="grid-2">
+                <div class="card card-blue">
+                    <h3>☸ Kubernetes Manifests</h3>
+                    <p>Pods, Deployments, Services, ConfigMaps, Ingress, etc. are all YAML.</p>
+                    <p>Example files: <code>deployment.yaml</code>, <code>service.yaml</code></p>
+                </div>
+
+                <div class="card card-purple">
+                    <h3>⚙️ CI/CD Pipelines</h3>
+                    <p>Common pipeline definitions:</p>
+                    <ul>
+                        <li><code>.gitlab-ci.yml</code> (GitLab CI)</li>
+                        <li><code>.github/workflows/*.yml</code> (GitHub Actions)</li>
+                        <li><code>azure-pipelines.yml</code> (Azure Pipelines)</li>
+                    </ul>
+                </div>
+
+                <div class="card card-green">
+                    <h3>🧱 IaC & Config Tools</h3>
+                    <ul>
+                        <li>Ansible playbooks (YAML)</li>
+                        <li>Some Terraform modules accept YAML configs</li>
+                        <li>Helm charts (<code>values.yaml</code>)</li>
+                    </ul>
+                </div>
+
+                <div class="card card-amber">
+                    <h3>🐳 Containers & Services</h3>
+                    <ul>
+                        <li><code>docker-compose.yml</code> for multi-container apps</li>
+                        <li>Service meshes / ingress controllers often use YAML</li>
+                    </ul>
+                </div>
+
+                <div class="card card-rose">
+                    <h3>📦 Application Configuration</h3>
+                    <ul>
+                        <li>Spring Boot: <code>application.yml</code></li>
+                        <li>Python apps: <code>config.yaml</code></li>
+                        <li>Various tools: <code>settings.yml</code>, <code>config.yml</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="box box-green">
+                <h3>Conclusion</h3>
+                <p>If you're doing <strong>DevOps, SRE, or Cloud</strong>, YAML is a must-have skill.</p>
+            </div>
+        </div>
+
+        <!-- WHY -->
+        <div id="why" class="section">
+            <h2>3. Why Is YAML Important?</h2>
+
+            <div class="grid-3">
+                <div class="card card-blue">
+                    <h3>1️⃣ Language of Configuration</h3>
+                    <p>Most modern DevOps tools use YAML as their configuration language:</p>
+                    <ul>
+                        <li>Kubernetes manifests</li>
+                        <li>CI/CD pipelines</li>
+                        <li>Helm charts, Ansible, etc.</li>
+                    </ul>
+                </div>
+
+                <div class="card card-purple">
+                    <h3>2️⃣ Human-Friendly & Clean</h3>
+                    <ul>
+                        <li>No braces, no commas</li>
+                        <li>Indentation-based hierarchy</li>
+                        <li>Feels like structured notes</li>
+                        <li>Easier code reviews</li>
+                    </ul>
+                </div>
+
+                <div class="card card-green">
+                    <h3>3️⃣ Declarative & Machine-Friendly</h3>
+                    <ul>
+                        <li>Describes <strong>desired state</strong>, not step-by-step commands</li>
+                        <li>Tools like Kubernetes/Ansible apply that desired state</li>
+                        <li>Can be easily converted to JSON and parsed in any language</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="box box-amber">
+                <h3>Declarative Mindset</h3>
+                <p>
+                    YAML works best with declarative tools:
+                    <span class="highlight">“I want 3 replicas of this app”</span> – and Kubernetes makes it true.
+                </p>
+            </div>
+        </div>
+
+        <!-- BASICS -->
+        <div id="basics" class="section">
+            <h2>4. YAML Basics & Syntax</h2>
+            <p class="tagline">If you understand this section well, you’ll avoid 80% of YAML errors in real projects.</p>
+
+            <div class="box box-blue">
+                <h3>4.1 Indentation is Everything (Spaces, NOT Tabs)</h3>
+                <p>YAML uses indentation to represent structure.</p>
+                <ul>
+                    <li>Use <strong>spaces only</strong> (no tabs).</li>
+                    <li>Common: 2 spaces per level (sometimes 4).</li>
+                </ul>
+                <div class="code-block">
+<span class="comm"># Good</span><br>
+server:<br>
+&nbsp;&nbsp;host: localhost<br>
+&nbsp;&nbsp;port: 8080<br><br>
+<span class="comm"># Bad (tabs or wrong spaces) → parser errors</span>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="box box-green">
+                    <h3>4.2 Key–Value Pairs (Maps)</h3>
+                    <p>Basic structure:</p>
+                    <div class="code-block">
+name: pratik<br>
+age: 24<br>
+active: true
+                    </div>
+                    <p>This is similar to a dictionary/object.</p>
+                </div>
+
+                <div class="box box-purple">
+                    <h3>4.3 Lists (Sequences)</h3>
+                    <p><strong>List of simple values:</strong></p>
+                    <div class="code-block">
+skills:<br>
+&nbsp;&nbsp;- git<br>
+&nbsp;&nbsp;- docker<br>
+&nbsp;&nbsp;- linux
+                    </div>
+                    <p><strong>List of objects:</strong></p>
+                    <div class="code-block">
+users:<br>
+&nbsp;&nbsp;- name: pratik<br>
+&nbsp;&nbsp;&nbsp;&nbsp;role: devops<br>
+&nbsp;&nbsp;- name: rahul<br>
+&nbsp;&nbsp;&nbsp;&nbsp;role: backend
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="box box-amber">
+                    <h3>4.4 Data Types</h3>
+                    <div class="code-block">
+string_value: "hello"<br>
+another_string: hello<br><br>
+integer_value: 10<br>
+float_value: 3.14<br><br>
+boolean_true: true<br>
+boolean_false: false<br><br>
+null_value: null   <span class="comm"># or ~</span><br><br>
+password: "abc:123#test"
+                    </div>
+                    <p>Use quotes when you have <code>:</code>, <code>#</code>, or special characters.</p>
+                </div>
+
+                <div class="box box-green">
+                    <h3>4.5 Comments</h3>
+                    <div class="code-block">
+<span class="comm"># This is a comment</span><br>
+app:<br>
+&nbsp;&nbsp;name: demo-app  <span class="comm"># inline comment</span>
+                    </div>
+                    <p>Everything after <code>#</code> is ignored by the parser.</p>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="box box-blue">
+                    <h3>4.6 Multiline Strings</h3>
+                    <p><strong>Literal block <code>|</code> (keeps newlines):</strong></p>
+                    <div class="code-block">
+description: |<br>
+&nbsp;&nbsp;This is line one.<br>
+&nbsp;&nbsp;This is line two.<br>
+&nbsp;&nbsp;Newlines are preserved.
+                    </div>
+                    <p><strong>Folded block <code>&gt;</code> (joins lines):</strong></p>
+                    <div class="code-block">
+message: &gt;<br>
+&nbsp;&nbsp;This is a long line<br>
+&nbsp;&nbsp;that will be folded<br>
+&nbsp;&nbsp;into a single line.
+                    </div>
+                </div>
+
+                <div class="box box-purple">
+                    <h3>4.7 Nested Structures</h3>
+                    <div class="code-block">
+services:<br>
+&nbsp;&nbsp;backend:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: my-backend:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 8081<br>
+&nbsp;&nbsp;frontend:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: my-frontend:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;replicas: 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- 80
+                    </div>
+                    <p>Very similar to what you see in Kubernetes or Docker Compose.</p>
+                </div>
+            </div>
+
+            <div class="box box-amber">
+                <h3>4.8 Anchors & Aliases (Advanced but Useful)</h3>
+                <div class="code-block">
+defaults: &amp;default-config<br>
+&nbsp;&nbsp;retries: 3<br>
+&nbsp;&nbsp;timeout: 30<br><br>
+service_a:<br>
+&nbsp;&nbsp;&lt;&lt;: *default-config<br>
+&nbsp;&nbsp;url: https://service-a.example.com<br><br>
+service_b:<br>
+&nbsp;&nbsp;&lt;&lt;: *default-config<br>
+&nbsp;&nbsp;url: https://service-b.example.com
+                </div>
+                <p>
+                    <code>&amp;default-config</code> defines an anchor.<br>
+                    <code>*default-config</code> reuses it. <code>&lt;&lt;:</code> merges the map.
+                </p>
+            </div>
+        </div>
+
+        <!-- INTERVIEW -->
+        <div id="interview" class="section">
+            <h2>5. YAML Interview Questions & Answers</h2>
+            <p class="tagline">Memorize/adapt these for DevOps, SRE, or Cloud interviews.</p>
+
+            <!-- Q1 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q1. What is YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    YAML (YAML Ain’t Markup Language) is a human-readable data serialization format commonly used
+                    for configuration files. It represents data using indentation-based structure with key–value pairs,
+                    lists, and nested objects.
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q2. How is YAML different from JSON?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>YAML is more human-friendly: no braces, no commas, uses indentation.</li>
+                        <li>YAML supports comments using <code>#</code>.</li>
+                        <li>JSON is stricter and more machine-focused.</li>
+                        <li>Most YAML can be converted to JSON and vice versa.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q3. Where is YAML used in DevOps?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Common places:
+                    <ul>
+                        <li>Kubernetes manifests (Pods, Deployments, Services, etc.)</li>
+                        <li>CI/CD configs (GitLab CI, GitHub Actions, Azure Pipelines)</li>
+                        <li>Docker Compose files</li>
+                        <li>Ansible playbooks</li>
+                        <li>Helm charts (<code>values.yaml</code>)</li>
+                        <li>Application configs (e.g., <code>application.yml</code>)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q4. Is YAML indentation-sensitive?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Yes. YAML uses indentation with spaces (no tabs) to define nesting and structure. Incorrect
+                    indentation will break parsing or change the meaning of the data.
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q5. What are the basic data types in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Scalars:</strong> strings, integers, floats, booleans (<code>true</code>, <code>false</code>), null (<code>null</code> or <code>~</code>).</li>
+                        <li><strong>Collections:</strong> maps (key–value pairs / dictionaries) and sequences (lists / arrays).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q6. How do you define a list in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Using dashes under a key:
+                    <div class="code-block">
+fruits:<br>
+&nbsp;&nbsp;- apple<br>
+&nbsp;&nbsp;- mango<br>
+&nbsp;&nbsp;- banana
+                    </div>
+                    This represents a list of three string elements.
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q7. How do you represent a nested object (map) in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Using indentation:
+                    <div class="code-block">
+database:<br>
+&nbsp;&nbsp;host: localhost<br>
+&nbsp;&nbsp;port: 5432<br>
+&nbsp;&nbsp;user: admin
+                    </div>
+                    <p><code>database</code> is a map with keys <code>host</code>, <code>port</code>, and <code>user</code>.</p>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q8. How do you add comments in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Use <code>#</code> for both full-line and inline comments:
+                    <div class="code-block">
+<span class="comm"># This is a comment</span><br>
+name: pratik  <span class="comm"># inline comment</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q9. What is the difference between <code>|</code> and <code>&gt;</code> in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong><code>|</code> (literal block):</strong> preserves newlines exactly.</li>
+                        <li><strong><code>&gt;</code> (folded block):</strong> folds multiple lines into a single line with spaces.</li>
+                    </ul>
+                    Example:
+                    <div class="code-block">
+literal: |<br>
+&nbsp;&nbsp;line1<br>
+&nbsp;&nbsp;line2<br><br>
+folded: &gt;<br>
+&nbsp;&nbsp;line1<br>
+&nbsp;&nbsp;line2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q10 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q10. What are anchors and aliases in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li><strong>Anchor (&amp;name):</strong> defines reusable content.</li>
+                        <li><strong>Alias (*name):</strong> refers to that content.</li>
+                    </ul>
+                    Example:
+                    <div class="code-block">
+defaults: &amp;defaults<br>
+&nbsp;&nbsp;retries: 3<br>
+&nbsp;&nbsp;timeout: 30<br><br>
+service:<br>
+&nbsp;&nbsp;&lt;&lt;: *defaults<br>
+&nbsp;&nbsp;url: https://example.com
+                    </div>
+                    This helps avoid repetition in large configs.
+                </div>
+            </div>
+
+            <!-- Q11 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q11. How would you detect YAML syntax errors?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>Use online YAML validators.</li>
+                        <li>Use CLI tools like <code>yamllint</code>.</li>
+                        <li>Use IDE/editor support with YAML plugins.</li>
+                        <li>Check indentation, colons, and list dashes carefully.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q12 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q12. Can YAML represent lists of maps? Give an example.</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Yes. Example:
+                    <div class="code-block">
+users:<br>
+&nbsp;&nbsp;- name: pratik<br>
+&nbsp;&nbsp;&nbsp;&nbsp;role: devops<br>
+&nbsp;&nbsp;- name: alex<br>
+&nbsp;&nbsp;&nbsp;&nbsp;role: sre
+                    </div>
+                    This is a list where each element is a map (object).
+                </div>
+            </div>
+
+            <!-- Q13 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q13. How do you represent boolean and null values in YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <div class="code-block">
+is_active: true<br>
+is_deleted: false<br>
+no_value: null   <span class="comm"># or ~</span>
+                    </div>
+                    Many parsers prefer lowercase <code>true</code>/<code>false</code>, so it is safer.
+                </div>
+            </div>
+
+            <!-- Q14 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q14. Can YAML be parsed in programming languages? Give an example.</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    Yes. Most languages have YAML libraries. Example in Python:
+                    <div class="code-block">
+import yaml<br><br>
+with open("config.yaml") as f:<br>
+&nbsp;&nbsp;config = yaml.safe_load(f)<br><br>
+print(config["app"]["name"])
+                    </div>
+                    This loads YAML into a Python dictionary.
+                </div>
+            </div>
+
+            <!-- Q15 -->
+            <div class="qa-item">
+                <button class="qa-question" onclick="toggleQA(event)">
+                    <span>Q15. What are common mistakes people make with YAML?</span>
+                    <span class="qa-toggle">▼</span>
+                </button>
+                <div class="qa-answer">
+                    <ul>
+                        <li>Mixing tabs and spaces.</li>
+                        <li>Incorrect indentation levels.</li>
+                        <li>Missing space after <code>:</code> (using <code>key:value</code> instead of <code>key: value</code>).</li>
+                        <li>Using special characters (<code>:</code>, <code>#</code>) without quoting the value.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAMPLES -->
+        <div id="examples" class="section">
+            <h2>6. Hands-On YAML Examples & Tutorials</h2>
+            <p class="tagline">Try these yourself to make YAML feel natural.</p>
+
+            <!-- Example 1 -->
+            <div class="example-box example-blue">
+                <h3>Example 1: Simple <code>config.yaml</code></h3>
+                <p>Create a file <code>config.yaml</code>:</p>
+                <div class="code-block">
+app:<br>
+&nbsp;&nbsp;name: my-devops-app<br>
+&nbsp;&nbsp;version: 1.0.0<br>
+&nbsp;&nbsp;debug: true<br><br>
+server:<br>
+&nbsp;&nbsp;host: 0.0.0.0<br>
+&nbsp;&nbsp;port: 8080<br><br>
+database:<br>
+&nbsp;&nbsp;host: localhost<br>
+&nbsp;&nbsp;port: 5432<br>
+&nbsp;&nbsp;user: admin<br>
+&nbsp;&nbsp;password: "secret123"<br><br>
+features:<br>
+&nbsp;&nbsp;- login<br>
+&nbsp;&nbsp;- signup<br>
+&nbsp;&nbsp;- reports
+                </div>
+                <p><strong>Task:</strong> Change <code>debug</code> to <code>false</code> and add another feature.</p>
+            </div>
+
+            <!-- Example 2 -->
+            <div class="example-box example-green">
+                <h3>Example 2: Read YAML in Python</h3>
+                <p>Install PyYAML:</p>
+                <div class="code-block">
+pip install pyyaml
+                </div>
+                <p>Create <code>read_yaml.py</code>:</p>
+                <div class="code-block">
+import yaml<br><br>
+with open("config.yaml") as f:<br>
+&nbsp;&nbsp;config = yaml.safe_load(f)<br><br>
+print("App Name:", config["app"]["name"])<br>
+print("Server Port:", config["server"]["port"])<br>
+print("Features:", config["features"])
+                </div>
+                <p>Run <code>python read_yaml.py</code> to see values from your YAML config.</p>
+            </div>
+
+            <!-- Example 3 -->
+            <div class="example-box example-purple">
+                <h3>Example 3: Simple Docker Compose (YAML)</h3>
+                <p>Create <code>docker-compose.yml</code>:</p>
+                <div class="code-block">
+version: "3.8"<br><br>
+services:<br>
+&nbsp;&nbsp;web:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: nginx:alpine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "8080:80"
+                </div>
+                <p>
+                    Run <code>docker compose up</code> and open <code>http://localhost:8080</code> –
+                    you used YAML to define a service.
+                </p>
+            </div>
+
+            <!-- Example 4 -->
+            <div class="example-box example-blue">
+                <h3>Example 4: Small GitLab CI YAML</h3>
+                <p>Create <code>.gitlab-ci.yml</code>:</p>
+                <div class="code-block">
+stages:<br>
+&nbsp;&nbsp;- test<br><br>
+test_job:<br>
+&nbsp;&nbsp;stage: test<br>
+&nbsp;&nbsp;image: python:3.12-slim<br>
+&nbsp;&nbsp;script:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- python --version<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- echo "Running tests"
+                </div>
+                <p>Push to GitLab; it will automatically run this pipeline using your YAML config.</p>
+            </div>
+
+            <!-- Example 5 -->
+            <div class="example-box example-green">
+                <h3>Example 5: Mini Kubernetes Deployment</h3>
+                <p>Create <code>deployment.yaml</code>:</p>
+                <div class="code-block">
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-deployment<br>
+spec:<br>
+&nbsp;&nbsp;replicas: 2<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: nginx:1.25-alpine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 80
+                </div>
+                <p>If you have kubectl configured:</p>
+                <div class="code-block">
+kubectl apply -f deployment.yaml<br>
+kubectl get pods
+                </div>
+            </div>
+
+            <!-- Example 6 -->
+            <div class="example-box example-amber">
+                <h3>Example 6: Indentation Practice – Spot the Error</h3>
+                <p>Original:</p>
+                <div class="code-block">
+app:<br>
+&nbsp;&nbsp;name: demo<br>
+version: 1.0   <span class="comm"># Is this nested or top-level?</span>
+                </div>
+                <p>Here, <code>version</code> is top-level, not under <code>app</code>.</p>
+                <p>Correct version (if you want it under <code>app</code>):</p>
+                <div class="code-block">
+app:<br>
+&nbsp;&nbsp;name: demo<br>
+&nbsp;&nbsp;version: 1.0
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARE -->
+        <div id="compare" class="section">
+            <h2>7. YAML vs JSON vs XML</h2>
+            <p class="tagline">Same idea (structured data), different trade-offs.</p>
+
+            <div class="grid-3">
+                <div class="card card-blue">
+                    <h3>YAML</h3>
+                    <p>Best for:</p>
+                    <ul>
+                        <li>DevOps configs (K8s, CI/CD)</li>
+                        <li>Human-edited configuration</li>
+                    </ul>
+                    <p>Pros:</p>
+                    <ul>
+                        <li>Very readable</li>
+                        <li>Supports comments</li>
+                        <li>Minimal syntax</li>
+                    </ul>
+                    <p>Cons:</p>
+                    <ul>
+                        <li>Indentation errors</li>
+                        <li>Weaker schema validation by default</li>
+                    </ul>
+                </div>
+
+                <div class="card card-green">
+                    <h3>JSON</h3>
+                    <p>Best for:</p>
+                    <ul>
+                        <li>APIs, web apps, microservices</li>
+                        <li>Data exchange backend ⇄ frontend</li>
+                    </ul>
+                    <p>Pros:</p>
+                    <ul>
+                        <li>Lightweight & ubiquitous</li>
+                        <li>Easy to parse in any language</li>
+                    </ul>
+                    <p>Cons:</p>
+                    <ul>
+                        <li>No comments</li>
+                        <li>Harder to read in large configs</li>
+                    </ul>
+                </div>
+
+                <div class="card card-purple">
+                    <h3>XML</h3>
+                    <p>Best for:</p>
+                    <ul>
+                        <li>Enterprise & legacy systems</li>
+                        <li>Document-style data, SOAP, metadata</li>
+                    </ul>
+                    <p>Pros:</p>
+                    <ul>
+                        <li>Rich schema validation (XSD)</li>
+                        <li>Handles complex structures & attributes</li>
+                    </ul>
+                    <p>Cons:</p>
+                    <ul>
+                        <li>Very verbose</li>
+                        <li>Hard to write and read manually</li>
+                    </ul>
+                </div>
+            </div>
+
+            <table class="table-like">
+                <thead>
+                <tr>
+                    <th>Feature / Criteria</th>
+                    <th>YAML</th>
+                    <th>JSON</th>
+                    <th>XML</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Human readability</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>Machine readability</td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>⭐⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td>Supports comments</td>
+                    <td>✔ Yes</td>
+                    <td>✘ No</td>
+                    <td>✔ Yes</td>
+                </tr>
+                <tr>
+                    <td>Best use case</td>
+                    <td>Config & DevOps</td>
+                    <td>APIs, web apps</td>
+                    <td>Enterprise & documents</td>
+                </tr>
+                <tr>
+                    <td>Syntax style</td>
+                    <td>Indented key–value</td>
+                    <td>Braces <code>{ }</code>, brackets <code>[ ]</code></td>
+                    <td>Tags <code>&lt;tag&gt;</code></td>
+                </tr>
+                <tr>
+                    <td>Widely used in DevOps?</td>
+                    <td>✔ Yes</td>
+                    <td>✔ Yes</td>
+                    <td>✘ Rare</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="split-compare">
+                <div>
+                    <div class="compare-title">Same Data in YAML</div>
+                    <div class="code-block">
+user:<br>
+&nbsp;&nbsp;name: Pratik<br>
+&nbsp;&nbsp;role: DevOps<br>
+&nbsp;&nbsp;skills:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- Git<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- Docker<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- Linux
+                    </div>
+                </div>
+                <div>
+                    <div class="compare-title">Same Data in JSON</div>
+                    <div class="code-block">
+{<br>
+&nbsp;&nbsp;"user": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"name": "Pratik",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"role": "DevOps",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"skills": ["Git", "Docker", "Linux"]<br>
+&nbsp;&nbsp;}<br>
+}
+                    </div>
+                </div>
+                <div>
+                    <div class="compare-title">Same Data in XML</div>
+                    <div class="code-block">
+&lt;user&gt;<br>
+&nbsp;&nbsp;&lt;name&gt;Pratik&lt;/name&gt;<br>
+&nbsp;&nbsp;&lt;role&gt;DevOps&lt;/role&gt;<br>
+&nbsp;&nbsp;&lt;skills&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;skill&gt;Git&lt;/skill&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;skill&gt;Docker&lt;/skill&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;skill&gt;Linux&lt;/skill&gt;<br>
+&nbsp;&nbsp;&lt;/skills&gt;<br>
+&lt;/user&gt;
+                    </div>
+                </div>
+            </div>
+
+            <div class="box box-blue">
+                <h3>Short Summary</h3>
+                <ul>
+                    <li>Use <strong>YAML</strong> when humans will edit configs (K8s, CI/CD, Ansible).</li>
+                    <li>Use <strong>JSON</strong> for APIs and data exchange between services.</li>
+                    <li>Use <strong>XML</strong> when you need strong schema validation or work with older enterprise systems.</li>
+                </ul>
+                <p>Bonus: YAML is essentially a superset of JSON – JSON can be converted to YAML easily.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        YAML Mini-Guide • Perfect for notes, README, or quick DevOps interview revision
+    </div>
+</div>
+
+<script>
+    function switchTab(event, sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.add('active');
+
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        event.currentTarget.classList.add('active');
+    }
+
+    function toggleQA(event) {
+        const btn = event.currentTarget;
+        const qaItem = btn.closest('.qa-item');
+        const answer = qaItem.querySelector('.qa-answer');
+        const icon = btn.querySelector('.qa-toggle');
+
+        const isOpen = answer.classList.contains('show');
+
+        document.querySelectorAll('.qa-answer').forEach(a => a.classList.remove('show'));
+        document.querySelectorAll('.qa-toggle').forEach(i => i.classList.remove('rotate'));
+
+        if (!isOpen) {
+            answer.classList.add('show');
+            icon.classList.add('rotate');
+        }
+    }
+</script>
+</body>
+</html>
