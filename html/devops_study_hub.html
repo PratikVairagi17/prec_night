@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevOps Study Hub – All In One</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+            min-height: 100vh;
+            color: #e5e7eb;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.1), rgba(129,140,248,0.08));
+            border: 1px solid rgba(148,163,184,0.5);
+            box-shadow: 0 18px 55px rgba(15,23,42,0.7);
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #f97316 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+        }
+
+        header p {
+            color: #cbd5f5;
+            font-size: 0.98rem;
+            opacity: 0.9;
+        }
+
+        .header-badges {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            border: 1px solid rgba(148,163,184,0.7);
+            background: rgba(15,23,42,0.75);
+            color: #e5e7eb;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(15,23,42,0.9);
+            border-radius: 18px;
+            border: 1px solid rgba(51,65,85,0.9);
+            padding: 18px 18px 20px;
+            box-shadow: 0 15px 40px rgba(15,23,42,0.8);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            color: #e5e7eb;
+        }
+
+        .sidebar p {
+            font-size: 0.82rem;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px 10px 30px;
+            border-radius: 999px;
+            border: 1px solid rgba(75,85,99,0.9);
+            background: rgba(15,23,42,0.95);
+            color: #e5e7eb;
+            font-size: 0.85rem;
+        }
+
+        .search-box input::placeholder {
+            color: #6b7280;
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 9px;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .topic-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .topic-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 11px;
+            border-radius: 12px;
+            border: 1px solid rgba(55,65,81,0.9);
+            background: radial-gradient(circle at top left, rgba(56,189,248,0.12), rgba(15,23,42,0.96));
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-2px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 28px rgba(15,23,42,0.9);
+        }
+
+        .topic-card.active {
+            background: linear-gradient(135deg, #38bdf8 0%, #6366f1 40%, #ec4899 100%);
+            border-color: transparent;
+            box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+        }
+
+        .topic-card.active .topic-title,
+        .topic-card.active .topic-tag,
+        .topic-card.active .topic-icon {
+            color: #f9fafb;
+        }
+
+        .topic-icon {
+            font-size: 1.1rem;
+            color: #38bdf8;
+        }
+
+        .topic-text {
+            flex: 1;
+        }
+
+        .topic-title {
+            font-weight: 600;
+            color: #e5e7eb;
+            margin-bottom: 2px;
+        }
+
+        .topic-tag {
+            font-size: 0.74rem;
+            color: #9ca3af;
+        }
+
+        .topic-level {
+            font-size: 0.7rem;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.6);
+            color: #e5e7eb;
+        }
+
+        .hint-box {
+            margin-top: 16px;
+            font-size: 0.78rem;
+            padding: 10px 11px;
+            border-radius: 10px;
+            border: 1px dashed rgba(148,163,184,0.8);
+            background: rgba(15,23,42,0.85);
+            color: #9ca3af;
+        }
+
+        .hint-box strong {
+            color: #e5e7eb;
+        }
+
+        /* Main area */
+        .main-area {
+            background: rgba(15,23,42,0.96);
+            border-radius: 18px;
+            border: 1px solid rgba(55,65,81,0.9);
+            padding: 18px;
+            box-shadow: 0 18px 50px rgba(15,23,42,0.9);
+            display: flex;
+            flex-direction: column;
+            min-height: 70vh;
+        }
+
+        .viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(55,65,81,0.9);
+        }
+
+        .viewer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .viewer-subtitle {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .viewer-pill {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.7);
+            color: #e5e7eb;
+        }
+
+        .iframe-wrapper {
+            flex: 1;
+            margin-top: 10px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(51,65,85,0.9);
+            background: radial-gradient(circle at top, #020617, #000);
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: calc(100vh - 220px);
+            border: none;
+            background: white;
+        }
+
+        .placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            color: #9ca3af;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .placeholder-icon {
+            font-size: 2.4rem;
+        }
+
+        .shortcut-list {
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .shortcut-list span {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .shortcut-key {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(75,85,99,0.9);
+            font-size: 0.72rem;
+            color: #e5e7eb;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            iframe {
+                height: calc(100vh - 280px);
+            }
+        }
+
+        @media (max-width: 640px) {
+            header h1 {
+                font-size: 1.95rem;
+            }
+
+            .main-area {
+                padding: 14px;
+            }
+
+            .sidebar {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>DevOps Study Hub – All In One</h1>
+        <p>Pick a topic on the left (DevOps, Git, Docker, Jenkins, Terraform, YAML, etc.) and the full guide will open here.</p>
+        <div class="header-badges">
+            <span class="badge">CI/CD</span>
+            <span class="badge">Git • GitHub • GitLab</span>
+            <span class="badge">Docker • Jenkins • Terraform</span>
+            <span class="badge">YAML & Configs</span>
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>Topics</h2>
+            <p>Select any topic to load its mini-guide.</p>
+
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input id="topicSearch" type="text" placeholder="Search topic (docker, git, jenkins, yaml...)" />
+            </div>
+
+            <div id="topicGrid" class="topic-grid">
+                <!-- Each card uses data-file to point to your existing HTML file -->
+                <div class="topic-card" data-file="devOps_tools.html" data-title="DevOps tools  Complete Guide" data-subtitle="tools , function , DevOps use">
+                    <div class="topic-icon"> </div>
+                    <div class="topic-text">
+                        <div class="topic-title">DevOpos TOOL's</div>
+                        <div class="topic-tag"> TOOL's </div>
+                    </div>
+                    <span class="topic-level">Core</span>
+                </div>
+                <div class="topic-card" data-file="aws_tools.html" data-title="aws DevOps tools  Complete Guide" data-subtitle="tools , function , DevOps use">
+                    <div class="topic-icon"> </div>
+                    <div class="topic-text">
+                        <div class="topic-title">AWS  TOOL's</div>
+                        <div class="topic-tag"> TOOL's </div>
+                    </div>
+                    <span class="topic-level">Core</span>
+                </div>
+                <div class="topic-card" data-file="devops.html" data-title="DevOps Mini-Guide" data-subtitle="What, why, lifecycle & interview Q&A">
+                    <div class="topic-icon">⚙️</div>
+                    <div class="topic-text">
+                        <div class="topic-title">DevOps Overview</div>
+                        <div class="topic-tag">Culture • CI/CD • Lifecycle</div>
+                    </div>
+                    <span class="topic-level">Core</span>
+                </div>
+
+                <div class="topic-card" data-file="gitgithub.html" data-title="Git & GitHub Complete Study Guide" data-subtitle="Workflow, branching, merge, rebase, interview Q&A">
+                    <div class="topic-icon">🌿</div>
+                    <div class="topic-text">
+                        <div class="topic-title">Git & GitHub</div>
+                        <div class="topic-tag">Branches • Merge • Rebase</div>
+                    </div>
+                    <span class="topic-level">Core</span>
+                </div>
+
+                <div class="topic-card" data-file="git_github_gitlab_ui.html" data-title="Git vs GitHub vs GitLab" data-subtitle="Visual comparison & concepts">
+                    <div class="topic-icon">📊</div>
+                    <div class="topic-text">
+                        <div class="topic-title">Git vs GitHub vs GitLab</div>
+                        <div class="topic-tag">Differences • Use-cases</div>
+                    </div>
+                    <span class="topic-level">Quick</span>
+                </div>
+
+                <div class="topic-card" data-file="git_lab.html" data-title="GitLab Mini-Guide" data-subtitle="CI/CD, pipelines, runners, interview Q&A">
+                    <div class="topic-icon">🦊</div>
+                    <div class="topic-text">
+                        <div class="topic-title">GitLab CI/CD</div>
+                        <div class="topic-tag">Pipelines • Runners • MR</div>
+                    </div>
+                    <span class="topic-level">CI/CD</span>
+                </div>
+                <div class="topic-card" data-file="CICD.html" data-title="CICD Complete Guide" data-subtitle="Basics, syntax, DevOps use, interview Q&A">
+                    <div class="topic-icon">🦊</div>
+                    <div class="topic-text">
+                        <div class="topic-title">CICD</div>
+                        <div class="topic-tag"> CI/CD</div>
+                    </div>
+                    <span class="topic-level">Config</span>
+                </div>
+
+                <div class="topic-card" data-file="docker_tutorial_ui.html" data-title="Docker Complete Guide" data-subtitle="Containers, images, commands, interview Q&A">
+                    <div class="topic-icon">🐳</div>
+                    <div class="topic-text">
+                        <div class="topic-title">Docker</div>
+                        <div class="topic-tag">Containers • Images • Dockerfile</div>
+                    </div>
+                    <span class="topic-level">Core</span>
+                </div>
+
+                <div class="topic-card" data-file="jenkin.html" data-title="Jenkins Mini-Guide" data-subtitle="Pipelines, agents, Jenkinsfile, interview Q&A">
+                    <div class="topic-icon">🤖</div>
+                    <div class="topic-text">
+                        <div class="topic-title">Jenkins</div>
+                        <div class="topic-tag">CI Server • Pipelines</div>
+                    </div>
+                    <span class="topic-level">CI/CD</span>
+                </div>
+
+                <div class="topic-card" data-file="terraform_learning_hub.html" data-title="Terraform Complete Learning Hub" data-subtitle="IaC, HCL, providers, interview Q&A">
+                    <div class="topic-icon">🌍</div>
+                    <div class="topic-text">
+                        <div class="topic-title">Terraform</div>
+                        <div class="topic-tag">IaC • Cloud automation</div>
+                    </div>
+                    <span class="topic-level">IaC</span>
+                </div>
+
+                <div class="topic-card" data-file="yaml_guide.html" data-title="YAML Complete Guide" data-subtitle="Basics, syntax, DevOps use, interview Q&A">
+                    <div class="topic-icon">📄</div>
+                    <div class="topic-text">
+                        <div class="topic-title">YAML</div>
+                        <div class="topic-tag">Configs • K8s • CI/CD</div>
+                    </div>
+                    <span class="topic-level">Config</span>
+                </div>
+                
+                
+            </div>
+
+            <div class="hint-box">
+                <strong>Tip:</strong>  
+                • Keep all topic files in the same folder as this hub.  
+                • Click a card to open that HTML inside the viewer.  
+                • Use the search box to quickly filter topics.
+            </div>
+        </aside>
+
+        <!-- Main Viewer -->
+        <main class="main-area">
+            <div class="viewer-header">
+                <div>
+                    <div id="viewerTitle" class="viewer-title">No topic selected yet</div>
+                    <div id="viewerSubtitle" class="viewer-subtitle">
+                        Choose a topic from the left panel. Your existing HTML guides (DevOps, Git, Docker, Jenkins, Terraform, YAML, etc.) will open here.
+                    </div>
+                    <div class="shortcut-list">
+                        <span><span class="shortcut-key">1</span> DevOps</span>
+                        <span><span class="shortcut-key">2</span> Git & GitHub</span>
+                        <span><span class="shortcut-key">3</span> Git vs GitHub vs GitLab</span>
+                        <span><span class="shortcut-key">4</span> GitLab</span>
+                        <span><span class="shortcut-key">5</span> Docker</span>
+                        <span><span class="shortcut-key">6</span> Jenkins</span>
+                        <span><span class="shortcut-key">7</span> Terraform</span>
+                        <span><span class="shortcut-key">8</span> YAML</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="viewer-pill">Inside viewer = your existing full-page file</span>
+                </div>
+            </div>
+
+            <div class="iframe-wrapper">
+                <div id="placeholder" class="placeholder">
+                    <div class="placeholder-icon">📚</div>
+                    <div>Welcome to your DevOps Study Hub.</div>
+                    <div>Select any topic from the left to load its complete mini-guide here.</div>
+                </div>
+                <iframe id="topicFrame" src="" title="DevOps Study Hub Viewer"></iframe>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    const topicCards = Array.from(document.querySelectorAll(".topic-card"));
+    const viewerTitle = document.getElementById("viewerTitle");
+    const viewerSubtitle = document.getElementById("viewerSubtitle");
+    const topicFrame = document.getElementById("topicFrame");
+    const placeholder = document.getElementById("placeholder");
+    const topicSearch = document.getElementById("topicSearch");
+    const topicGrid = document.getElementById("topicGrid");
+
+    function openTopic(card) {
+        const file = card.getAttribute("data-file");
+        const title = card.getAttribute("data-title");
+        const subtitle = card.getAttribute("data-subtitle");
+
+        topicCards.forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+
+        viewerTitle.textContent = title;
+        viewerSubtitle.textContent = subtitle || "";
+        placeholder.style.display = "none";
+        topicFrame.src = file;
+    }
+
+    topicCards.forEach((card, index) => {
+        card.addEventListener("click", () => openTopic(card));
+        card.dataset.index = index + 1; // For keyboard shortcuts 1..8
+    });
+
+    // Search / filter topics
+    topicSearch.addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        topicCards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            card.style.display = text.includes(term) ? "flex" : "none";
+        });
+    });
+
+    // Keyboard shortcuts 1-8 to open topics quickly
+    document.addEventListener("keydown", (e) => {
+        if (e.target === topicSearch) return; // Don't steal focus from input
+
+        const key = parseInt(e.key, 10);
+        if (!isNaN(key) && key >= 1 && key <= topicCards.length) {
+            const card = topicCards[key - 1];
+            if (card && card.style.display !== "none") {
+                openTopic(card);
+            }
+        }
+    });
+</script>
+</body>
+</html>
